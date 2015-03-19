@@ -9,6 +9,10 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/deps" />
+            <option value="$PROJECT_DIR$/deps/PhotoProcessing" />
+            <option value="$PROJECT_DIR$/deps/actionbarsherlock" />
+            <option value="$PROJECT_DIR$/deps/viewpagerIndicator" />
           </set>
         </option>
       </GradleProjectSettings>

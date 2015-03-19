@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="gridview_item_dimension_user">@dimen/gridview_item_dimension_user_large</dimen>
+</resources>

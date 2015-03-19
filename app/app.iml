@@ -79,6 +79,23 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 19 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="PhotoView-1.2.1" level="project" />
+    <orderEntry type="library" exported="" name="CWAC-MergeAdapter" level="project" />
+    <orderEntry type="library" exported="" name="nineoldandroids-2.4.0" level="project" />
+    <orderEntry type="library" exported="" name="CWAC-SackOfViewsAdapter" level="project" />
+    <orderEntry type="library" exported="" name="FacebookSDK-chrisbanes" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-20.0.0" level="project" />
+    <orderEntry type="library" exported="" name="crittercism_v3_0_11_sdkonly" level="project" />
+    <orderEntry type="library" exported="" name="crouton-1.8.1" level="project" />
+    <orderEntry type="library" exported="" name="ormlite-core-4.45" level="project" />
+    <orderEntry type="library" exported="" name="eventbus-2.0.2" level="project" />
+    <orderEntry type="library" exported="" name="support-annotations-20.0.0" level="project" />
+    <orderEntry type="library" exported="" name="Android-BitmapMemoryCache-v1.0" level="project" />
+    <orderEntry type="library" exported="" name="ormlite-android-4.45" level="project" />
+    <orderEntry type="library" exported="" name="SwipeDismissNOA-chrisbanes" level="project" />
+    <orderEntry type="module" module-name="viewpagerIndicator" exported="" />
+    <orderEntry type="module" module-name="actionbarsherlock" exported="" />
+    <orderEntry type="module" module-name="PhotoProcessing" exported="" />
   </component>
 </module>
 

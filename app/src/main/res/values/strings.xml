@@ -5,4 +5,24 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
+
+    <!-- Filter names -->
+    <string name="filter_original">Original</string>
+    <string name="filter_instafix">Instafix</string>
+    <string name="filter_ansel">Ansel</string>
+    <string name="filter_testino">Testino</string>
+    <string name="filter_xpro">XPro</string>
+    <string name="filter_bw">Black &amp; White</string>
+    <string name="filter_sepia">Sepia</string>
+    <string name="filter_cyano">Cyano</string>
+    <string name="filter_retro">Retro</string>
+    <string name="filter_georgia">Georgia</string>
+    <string name="filter_sahara">Sahara</string>
+    <string name="filter_hdr">HDR</string>
+
+    <string-array name="tab_titles">
+        <item>图片库</item>
+        <item>已选中</item>
+        <item>人脉圈</item>
+    </string-array>
 </resources>
