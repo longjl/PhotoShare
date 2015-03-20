@@ -25,6 +25,7 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.commonsware.cwac.merge.MergeAdapter;
@@ -152,7 +153,7 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
             mBuckets.clear();
             mBuckets.addAll(buckets);
             mBucketAdapter.notifyDataSetChanged();
-            setSelectedBucketFromPrefs();
+            // setSelectedBucketFromPrefs();
         }
     }
 

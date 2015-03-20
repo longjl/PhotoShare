@@ -93,7 +93,6 @@
     <orderEntry type="library" exported="" name="Android-BitmapMemoryCache-v1.0" level="project" />
     <orderEntry type="library" exported="" name="ormlite-android-4.45" level="project" />
     <orderEntry type="library" exported="" name="SwipeDismissNOA-chrisbanes" level="project" />
-    <orderEntry type="module" module-name="viewpagerIndicator" exported="" />
     <orderEntry type="module" module-name="actionbarsherlock" exported="" />
     <orderEntry type="module" module-name="PhotoProcessing" exported="" />
   </component>

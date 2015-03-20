@@ -25,7 +25,6 @@ dependencies {
 
     compile(
             project(':deps:actionbarsherlock'),
-            project(':deps:PhotoProcessing'),
-            project(':deps:viewpagerIndicator')
+            project(':deps:PhotoProcessing')
     )
 }

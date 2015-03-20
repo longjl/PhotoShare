@@ -6,7 +6,6 @@
       <module fileurl="file://$PROJECT_DIR$/TintinShare.iml" filepath="$PROJECT_DIR$/TintinShare.iml" />
       <module fileurl="file://$PROJECT_DIR$/deps/actionbarsherlock/actionbarsherlock.iml" filepath="$PROJECT_DIR$/deps/actionbarsherlock/actionbarsherlock.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/deps/viewpagerIndicator/viewpagerIndicator.iml" filepath="$PROJECT_DIR$/deps/viewpagerIndicator/viewpagerIndicator.iml" />
     </modules>
   </component>
 </project>

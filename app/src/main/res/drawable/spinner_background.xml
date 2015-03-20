@@ -14,20 +14,11 @@
   ~ limitations under the License.
   -->
 
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.tintinshare.views.PhotoImageView
-        android:id="@+id/iv_photo"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop" />
+    <gradient
+        android:angle="270"
+        android:endColor="@color/item_bg_mid"
+        android:startColor="@color/item_bg_light" />
 
-    <com.tintinshare.views.CheckableImageView
-        android:id="@+id/civ_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|right"
-        android:padding="@dimen/spacing"
-        android:scaleType="center"
-        android:src="@drawable/btn_selection" />
-</merge>
+</shape>

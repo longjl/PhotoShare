@@ -49,6 +49,7 @@ public class TintinShareActivity extends PhotoFragmentActivity {
             }
         }
     };
+
     /**
      * 对PagerSlidingTabStrip的各项属性进行赋值。
      */
