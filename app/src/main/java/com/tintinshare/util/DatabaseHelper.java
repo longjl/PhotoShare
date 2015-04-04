@@ -18,7 +18,7 @@ import java.sql.SQLException;
  */
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final Class<?>[] DATA_CLASSES = {Photo.class};
-    public static final String DATABASE_NAME = "photo.db";      //数据库名字
+    public static final String DATABASE_NAME = "/sdcard/tt/photo.db";      //数据库名字
     private static final int DATABASE_VERSION = 1;             //版本号
 
     private Dao<Photo, String> mPhotoDao = null;

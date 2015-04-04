@@ -33,9 +33,11 @@ import com.tintinshare.Constants;
 import com.tintinshare.Flags;
 import com.tintinshare.PhotoController;
 import com.tintinshare.R;
+import com.tintinshare.activities.PhotoViewerActivity;
 import com.tintinshare.adapters.CameraBaseAdapter;
 import com.tintinshare.adapters.PhotosCursorAdapter;
 import com.tintinshare.events.PhotoSelectionAddedEvent;
+import com.tintinshare.events.PhotoSelectionErrorEvent;
 import com.tintinshare.events.PhotoSelectionRemovedEvent;
 import com.tintinshare.model.MediaStoreBucket;
 import com.tintinshare.model.Photo;
@@ -104,7 +106,8 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
     private Spinner mBucketSpinner;
     private final ArrayList<MediaStoreBucket> mBuckets = new ArrayList<MediaStoreBucket>();
 
-    private TextView mCountTextView;
+    private TextView mCountTextView;//总数量
+    private TextView mSelectedCountTextView;//已选
 
     private PhotoController mPhotoSelectionController;
     private File mPhotoFile;
@@ -157,13 +160,12 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
         }
     }
 
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
         mAdapter = new MergeAdapter();
-
         if (Utils.hasCamera(getActivity())) {
             mAdapter.addAdapter(new CameraBaseAdapter(getActivity()));
         }
@@ -171,7 +173,7 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
         mAdapter.addAdapter(mPhotoAdapter);
 
         mBucketAdapter = new ArrayAdapter<MediaStoreBucket>(getActivity(),
-                Utils.getSpinnerItemResId(), mBuckets);
+                R.layout.layout_spinner_item, mBuckets);
         mBucketAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         EventBus.getDefault().register(this);
@@ -215,6 +217,8 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
         mBucketSpinner.setAdapter(mBucketAdapter);
 
         mCountTextView = (TextView) view.findViewById(R.id.tv_count);
+        mSelectedCountTextView = (TextView) view.findViewById(R.id.tv_selected_count);
+
         return view;
     }
 
@@ -237,7 +241,7 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
                 b = options.toBundle();
             }
 
-            /*
+
             Intent intent = new Intent(getActivity(), PhotoViewerActivity.class);
             // Need take Camera icon into account so minus 1
             intent.putExtra(PhotoViewerActivity.EXTRA_POSITION, position - 1);
@@ -245,7 +249,7 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
 
             MediaStoreBucket bucket = (MediaStoreBucket) mBucketSpinner.getSelectedItem();
             intent.putExtra(PhotoViewerActivity.EXTRA_BUCKET_ID, bucket.getId());
-            ActivityCompat.startActivity(getActivity(), intent, b);*/
+            ActivityCompat.startActivity(getActivity(), intent, b);
         }
     }
 
@@ -270,7 +274,6 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
                 mPhotoAdapter.swapCursor(data);
                 mPhotoGrid.setSelection(0);
                 setCountTextView(data.getCount());
-
                 break;
         }
     }
@@ -278,6 +281,12 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
     private void setCountTextView(final int count) {
         if (mCountTextView != null) {
             mCountTextView.setText(String.valueOf(count));
+        }
+    }
+
+    private void setSelectedCountTextView(final int count) {
+        if (mSelectedCountTextView != null) {
+            mSelectedCountTextView.setText(String.valueOf(count));
         }
     }
 
@@ -293,7 +302,7 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
                 PhotoItemLayout layout = (PhotoItemLayout) view;
                 if (upload.equals(layout.getPhotoSelection())) {
                     if (Flags.DEBUG) {
-                        Log.d("UserPhotosFragment", "Found View, setChecked");
+                        Log.d("PhotosFragment", "Found View, setChecked");
                     }
                     layout.setChecked(added);
                     break;
@@ -302,13 +311,27 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
         }
     }
 
+
+    /**
+     * 添加
+     *
+     * @param event
+     */
     public void onEvent(PhotoSelectionAddedEvent event) {
         if (event.isSingleChange()) {
             updateUploadView(event.getTarget(), true);
         } else {
             mPhotoAdapter.notifyDataSetChanged();
         }
+
+        setSelectedCountTextView(mPhotoSelectionController.getSelectedCount());
     }
+
+    /**
+     * 移除
+     *
+     * @param event
+     */
 
     public void onEvent(PhotoSelectionRemovedEvent event) {
         if (event.isSingleChange()) {
@@ -316,7 +339,19 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
         } else {
             mPhotoAdapter.notifyDataSetChanged();
         }
+        setSelectedCountTextView(mPhotoSelectionController.getSelectedCount());
     }
+
+    /**
+     * 添加图片异常(最多只能添加9张图片)
+     *
+     * @param event
+     */
+    public void onEvent(PhotoSelectionErrorEvent event) {
+        Toast.makeText(getActivity(), "你最多只能添加9张图片", Toast.LENGTH_SHORT).show();
+        mPhotoAdapter.notifyDataSetChanged();
+    }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

@@ -20,7 +20,6 @@ import com.tintinshare.views.PhotoItemLayout;
  */
 public class PhotosCursorAdapter extends ResourceCursorAdapter {
     private final PhotoController mController;
-
     public PhotosCursorAdapter(Context context, Cursor c) {
         super(context, R.layout.item_grid_photo, c, 0);
 
@@ -33,7 +32,7 @@ public class PhotosCursorAdapter extends ResourceCursorAdapter {
         PhotoItemLayout layout = (PhotoItemLayout) view;
         PhotoImageView iv = layout.getImageView();
 
-        final Photo photo = MediaStoreCursorHelper.photosCursorToSelection(
+       final Photo photo = MediaStoreCursorHelper.photosCursorToSelection(
                 MediaStoreCursorHelper.MEDIA_STORE_CONTENT_URI, cursor);
 
         if (null != photo) {
@@ -46,4 +45,5 @@ public class PhotosCursorAdapter extends ResourceCursorAdapter {
             }
         }
     }
+
 }

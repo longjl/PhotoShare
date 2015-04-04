@@ -2,6 +2,8 @@ package com.tintinshare;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
@@ -32,7 +34,7 @@ public class PhotoApplication extends Application {
         super.onCreate();
 
         if (Flags.ENABLE_BUG_TRACKING) {
-           // Crittercism.init(this, Constants.CRITTERCISM_API_KEY);
+            //Crittercism.init(this, Constants.CRITTERCISM_API_KEY);
         }
 
         //checkInstantUploadReceiverState();
@@ -70,6 +72,7 @@ public class PhotoApplication extends Application {
         }
         return mSingleThreadExecutor;
     }
+
     public BitmapLruCache getImageCache() {
         if (null == mImageCache) {
             mImageCache = new BitmapLruCache(this, Constants.IMAGE_CACHE_HEAP_PERCENTAGE);
@@ -88,6 +91,29 @@ public class PhotoApplication extends Application {
             mDatabaseThreadExecutor = Executors.newSingleThreadExecutor(new PhotoThreadFactory());
         }
         return mDatabaseThreadExecutor;
+    }
+
+
+    /**
+     * 判断是否安装应用
+     *
+     * @param context
+     * @param packageName
+     * @return
+     */
+    public  boolean uninstallSoftware(Context context, String packageName) {
+        PackageManager packageManager = context.getPackageManager();
+        try {
+            PackageInfo pInfo = packageManager.getPackageInfo(packageName,
+                    PackageManager.COMPONENT_ENABLED_STATE_DEFAULT);
+            //判断是否获取到了对应的包名信息
+            if (pInfo != null) {
+                return true;
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.e("uninstallSoftware", e.getMessage());
+        }
+        return false;
     }
 
     @Override

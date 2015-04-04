@@ -7,7 +7,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 
+import com.tintinshare.Flags;
 import com.tintinshare.PhotoApplication;
 import com.tintinshare.model.Photo;
 import com.tintinshare.tasks.PhotoThreadRunnable;
@@ -297,6 +299,51 @@ public class PhotoImageView extends CacheableImageView {
             requestFiltered(upload, false, null);
         } else {
             requestImage(upload, false, null);
+        }
+    }
+
+    private Runnable mRequestFaceDetectionRunnable;
+    static final int FACE_DETECTION_DELAY = 800;
+
+    public void clearFaceDetection() {
+        if (null != mRequestFaceDetectionRunnable) {
+            removeCallbacks(mRequestFaceDetectionRunnable);
+            mRequestFaceDetectionRunnable = null;
+        }
+    }
+
+    public void postFaceDetection(Photo selection) {
+        if (null == mRequestFaceDetectionRunnable && selection.requiresFaceDetectPass()) {
+            mRequestFaceDetectionRunnable = new RequestFaceDetectionPassRunnable(this, selection);
+            postDelayed(mRequestFaceDetectionRunnable, FACE_DETECTION_DELAY);
+        }
+    }
+
+    public void requestFullSize(final Photo upload, final boolean honourFilter,
+                                final OnPhotoLoadListener listener) {
+        requestFullSize(upload, honourFilter, true, listener);
+    }
+
+    public void requestFullSize(final Photo upload, final boolean honourFilter,
+                                final boolean clearDrawableOnLoad, final OnPhotoLoadListener listener) {
+        resetForRequest(clearDrawableOnLoad);
+
+        if (upload.requiresProcessing(true) && honourFilter) {
+            requestFiltered(upload, true, listener);
+        } else {
+            // Show thumbnail if it's in the cache
+            BitmapLruCache cache = PhotoApplication.getApplication(getContext()).getImageCache();
+            CacheableBitmapWrapper thumbWrapper = cache.get(upload.getThumbnailImageKey());
+            if (null != thumbWrapper && thumbWrapper.hasValidBitmap()) {
+                if (Flags.DEBUG) {
+                    Log.d("requestFullSize", "Got Cached Thumbnail");
+                }
+                setImageCachedBitmap(thumbWrapper);
+            } else {
+                setImageDrawable(null);
+            }
+
+            requestImage(upload, true, listener);
         }
     }
 }

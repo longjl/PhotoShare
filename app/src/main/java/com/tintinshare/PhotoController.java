@@ -3,7 +3,9 @@ package com.tintinshare;
 import android.content.Context;
 
 import com.tintinshare.events.PhotoSelectionAddedEvent;
+import com.tintinshare.events.PhotoSelectionErrorEvent;
 import com.tintinshare.events.PhotoSelectionRemovedEvent;
+import com.tintinshare.events.ShareEvent;
 import com.tintinshare.model.Photo;
 import com.tintinshare.util.PhotoDatabaseHelper;
 
@@ -54,6 +56,10 @@ public class PhotoController {
         return toBeRemoved;
     }
 
+    public synchronized List<Photo> getSelected() {
+        checkSelectedForInvalid(true);
+        return new ArrayList<Photo>(mSelectedPhotoList);
+    }
 
     public void populateFromDatabase() {
         if (Flags.ENABLE_DB_PERSISTENCE) {
@@ -74,6 +80,10 @@ public class PhotoController {
     }
 
 
+    public synchronized int getSelectedCount() {
+        return mSelectedPhotoList.size();
+    }
+
     private void checkSelectedForInvalid(final boolean sendEvent) {
         if (!mSelectedPhotoList.isEmpty()) {
             List<Photo> removedUploads = checkListForInvalid(mContext, mSelectedPhotoList);
@@ -89,24 +99,34 @@ public class PhotoController {
         }
     }
 
-    private void postEvent(Object event) {
+    /**
+     * 分享图片Event
+     */
+    public void sharePhotoEvent() {
+        postEvent(new ShareEvent());
+    }
+
+    public void postEvent(Object event) {
         EventBus.getDefault().post(event);
     }
 
     public synchronized boolean addSelection(final Photo selection) {
         boolean result = false;
-
         if (!mSelectedPhotoList.contains(selection)) {
-            selection.setUploadState(Photo.STATE_SELECTED);
-            mSelectedPhotoList.add(selection);
+            if (mSelectedPhotoList != null && mSelectedPhotoList.size() > 8) {
+                postEvent(new PhotoSelectionErrorEvent());
+            } else {
+                selection.setUploadState(Photo.STATE_SELECTED);
+                mSelectedPhotoList.add(selection);
 
-            // Save to Database
-            if (Flags.ENABLE_DB_PERSISTENCE) {
-                PhotoDatabaseHelper.saveToDatabase(mContext, selection);
+                // Save to Database
+                if (Flags.ENABLE_DB_PERSISTENCE) {
+                    PhotoDatabaseHelper.saveToDatabase(mContext, selection);
+                }
+
+                postEvent(new PhotoSelectionAddedEvent(selection));
+                result = true;
             }
-
-            postEvent(new PhotoSelectionAddedEvent(selection));
-            result = true;
         }
         return result;
     }
@@ -116,7 +136,6 @@ public class PhotoController {
         synchronized (this) {
             removed = mSelectedPhotoList.remove(selection);
         }
-
         if (removed) {
             // Delete from Database
             if (Flags.ENABLE_DB_PERSISTENCE) {
@@ -156,6 +175,17 @@ public class PhotoController {
             }
 
             postEvent(new PhotoSelectionAddedEvent(selections));
+        }
+    }
+
+
+    public synchronized boolean hasSelections() {
+        return !mSelectedPhotoList.isEmpty();
+    }
+
+    public synchronized void updateDatabase() {
+        if (Flags.ENABLE_DB_PERSISTENCE) {
+            PhotoDatabaseHelper.saveToDatabase(mContext, mSelectedPhotoList, false);
         }
     }
 }

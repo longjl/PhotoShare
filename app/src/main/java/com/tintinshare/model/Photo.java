@@ -9,16 +9,17 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.media.FaceDetector;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.SyncStateContract;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.lightbox.android.photoprocessing.PhotoProcessing;
+import com.lightbox.android.photoprocessing.utils.BitmapUtils;
 import com.tintinshare.Constants;
+import com.tintinshare.Flags;
 import com.tintinshare.PhotoApplication;
 import com.tintinshare.R;
 import com.tintinshare.events.UploadStateChangedEvent;
@@ -27,12 +28,12 @@ import com.tintinshare.listeners.OnFaceDetectionListener;
 import com.tintinshare.listeners.OnPhotoTagsChangedListener;
 import com.tintinshare.util.Utils;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -368,7 +369,7 @@ public class Photo {
     public Bitmap processBitmapUsingFilter(final Bitmap bitmap, final Filter filter,
                                            final boolean fullSize,
                                            final boolean modifyOriginal) {
-        Utils.checkPhotoProcessingThread();
+        //Utils.checkPhotoProcessingThread();
 
         PhotoProcessing.sendBitmapToNative(bitmap);
         if (modifyOriginal) {
@@ -477,5 +478,220 @@ public class Photo {
 
     private void notifyUploadStateListener() {
         EventBus.getDefault().post(new UploadStateChangedEvent(this));
+    }
+
+    public UploadQuality getUploadQuality() {
+        return null != mQuality ? mQuality : UploadQuality.MEDIUM;
+    }
+
+    public boolean requiresNativeEditing(Context context) {
+        return beenCropped() || beenFiltered() || getTotalRotation(context) != 0;
+    }
+
+    public int getTotalRotation(Context context) {
+        return (getExifRotation(context) + getUserRotation()) % 360;
+    }
+
+    public File getUploadSaveFile() {
+        File dir = new File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                "photo");
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        return new File(dir, System.currentTimeMillis() + ".jpg");
+    }
+
+
+    public Bitmap getUploadImage(Context context, final UploadQuality quality) {
+        return getUploadImageNative(context, quality);
+    }
+
+    private Bitmap getUploadImageNative(final Context context, final UploadQuality quality) {
+        Utils.checkPhotoProcessingThread();
+        try {
+            String path = Utils
+                    .getPathFromContentUri(context.getContentResolver(), getOriginalPhotoUri());
+            if (null != path) {
+                BitmapUtils.BitmapSize size = BitmapUtils.getBitmapSize(path);
+
+                if (quality.requiresResizing()) {
+                    final float resizeRatio = Math.max(size.width, size.height) / (float) quality
+                            .getMaxDimension();
+                    size = new BitmapUtils.BitmapSize(Math.round(size.width / resizeRatio),
+                            Math.round(size.height / resizeRatio));
+                }
+
+                boolean doAndroidDecode = true;
+
+                if (Flags.USE_INTERNAL_DECODER) {
+                    doAndroidDecode =
+                            PhotoProcessing.nativeLoadResizedBitmap(path, size.width * size.height)
+                                    != 0;
+
+                    if (Flags.DEBUG) {
+                        if (doAndroidDecode) {
+                            Log.d("MediaStorePhotoUpload",
+                                    "getUploadImage. Native decode failed :(");
+                        } else {
+                            Log.d("MediaStorePhotoUpload",
+                                    "getUploadImage. Native decode complete!");
+                        }
+                    }
+                }
+
+                if (doAndroidDecode) {
+                    if (Flags.DEBUG) {
+                        Log.d("MediaStorePhotoUpload", "getUploadImage. Doing Android decode");
+                    }
+
+                    // Just in case
+                    PhotoProcessing.nativeDeleteBitmap();
+
+                    // Decode in Android and send to native
+                    Bitmap bitmap = Utils
+                            .decodeImage(context.getContentResolver(), getOriginalPhotoUri(),
+                                    quality.getMaxDimension());
+
+                    if (null != bitmap) {
+                        PhotoProcessing.sendBitmapToNative(bitmap);
+                        bitmap.recycle();
+
+                        // Resize image to correct size
+                        PhotoProcessing.nativeResizeBitmap(size.width, size.height);
+                    } else {
+                        return null;
+                    }
+                }
+
+                /**
+                 * Apply crop if needed
+                 */
+                if (beenCropped()) {
+                    RectF rect = getCropValues();
+                    PhotoProcessing.nativeCrop(rect.left, rect.top, rect.right, rect.bottom);
+                }
+
+                /**
+                 * Apply filter if needed
+                 */
+                if (beenFiltered()) {
+                    PhotoProcessing.filterPhoto(getFilterUsed().getId());
+                    if (Flags.DEBUG) {
+                        Log.d("MediaStorePhotoUpload", "getUploadImage. Native filter complete!");
+                    }
+                }
+
+                /**
+                 * Rotate if needed
+                 */
+                final int rotation = getTotalRotation(context);
+                switch (rotation) {
+                    case 90:
+                        PhotoProcessing.nativeRotate90();
+                        break;
+                    case 180:
+                        PhotoProcessing.nativeRotate180();
+                        break;
+                    case 270:
+                        PhotoProcessing.nativeRotate180();
+                        PhotoProcessing.nativeRotate90();
+                        break;
+                }
+                if (Flags.DEBUG) {
+                    Log.d("MediaStorePhotoUpload",
+                            "getUploadImage. " + rotation + " degree rotation complete!");
+                }
+
+                if (Flags.DEBUG) {
+                    Log.d("MediaStorePhotoUpload", "getUploadImage. Native worked!");
+                }
+
+                return PhotoProcessing.getBitmapFromNative(null);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            // Just in case...
+            PhotoProcessing.nativeDeleteBitmap();
+        }
+
+        return null;
+    }
+
+    public Filter getFilterUsed() {
+        if (null == mFilter) {
+            mFilter = Filter.ORIGINAL;
+        }
+        return mFilter;
+    }
+
+    public int getUploadState() {
+        return mState;
+    }
+
+    public void setTagChangedListener(OnPhotoTagsChangedListener tagChangedListener) {
+        mTagChangedListener = new WeakReference<OnPhotoTagsChangedListener>(tagChangedListener);
+    }
+    public List<PhotoTag> getPhotoTags() {
+        if (null != mTags) {
+            return new ArrayList<PhotoTag>(mTags);
+        }
+        return null;
+    }
+
+    public void removePhotoTag(PhotoTag tag) {
+        if (null != mTags) {
+            mTags.remove(tag);
+            notifyTagListener(tag, false);
+
+            if (mTags.isEmpty()) {
+                mTags = null;
+            }
+        }
+        setRequiresSaveFlag();
+    }
+
+    public void rotateClockwise() {
+        mUserRotation += 90;
+        setRequiresSaveFlag();
+    }
+
+    public void setFilterUsed(Filter filter) {
+        mFilter = filter;
+        setRequiresSaveFlag();
+    }
+
+    public boolean requiresFaceDetectPass() {
+        return !mCompletedDetection;
+    }
+
+
+    public void setFaceDetectionListener(OnFaceDetectionListener listener) {
+        // No point keeping listener if we've already done a pass
+        if (!mCompletedDetection) {
+            mFaceDetectListener = new WeakReference<OnFaceDetectionListener>(listener);
+        }
+    }
+
+    public void setCropValues(RectF cropValues) {
+        if (checkCropValues(cropValues.left, cropValues.top, cropValues.right, cropValues.bottom)) {
+
+            mCropLeft = santizeCropValue(cropValues.left);
+            mCropTop = santizeCropValue(cropValues.top);
+            mCropRight = santizeCropValue(cropValues.right);
+            mCropBottom = santizeCropValue(cropValues.bottom);
+            if (Flags.DEBUG) {
+                Log.d(LOG_TAG, "Valid Crop Values: " + cropValues.toString());
+            }
+        } else {
+            if (Flags.DEBUG) {
+                Log.d(LOG_TAG, "Invalid Crop Values: " + cropValues.toString());
+            }
+            mCropLeft = mCropTop = MIN_CROP_VALUE;
+            mCropRight = mCropBottom = MAX_CROP_VALUE;
+        }
+
+        setRequiresSaveFlag();
     }
 }

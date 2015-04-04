@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="indicatorcolor">#ff1bad26</color>
-    <color name="selectedtextcolor">#ff1bad26</color>
+    <color name="indicatorcolor">#00a7df</color>
+    <color name="selectedtextcolor">#00a7df</color>
+
+
+
+    <color name="actionbar_color">#303537</color>
+    <color name="action_bar_color">#00a7df</color>
+
+
 
     <!-- Raw Colour Values -->
     <color name="blue_v_dark">#ff1A556B</color>
@@ -10,13 +17,14 @@
     <color name="blue_light">#ff6FCDF7</color>
     <color name="translucent_dk_grey">#88000000</color>
     <color name="translucent_grey">#50000000</color>
-    <color name="translucent_lght_grey">#30000000</color>
+    <color name="translucent_lght_grey">#DBDBDB</color>
 
     <!-- Logical Colours -->
     <color name="item_bg_dark">@color/blue_dark</color>
     <color name="item_bg_mid">@color/blue_med</color>
     <color name="item_bg_light">@color/blue_light</color>
     <color name="crop_rectangle_line">@android:color/white</color>
+    <color name="white">#ffffff</color>
     <color name="crop_rectangle_area">@color/translucent_grey</color>
     <color name="selected_fragment_bg">@color/blue_v_dark</color>
 
@@ -24,5 +32,8 @@
 
     <color name="notification_item_background_color_pressed">#ff454545</color>
 
-    <color name="divider_color">#2C2E2D</color>
+    <color name="divider_color">#393838</color>
+    <color name="text_color">#393838</color>
+
+    <color name="window_back_ground_color">#16191A</color>
 </resources>

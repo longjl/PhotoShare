@@ -16,7 +16,51 @@
         <item name="android:layout_marginTop">0dp</item>
     </style>
 
-    <style name="PhotupSpinner">
-        <item name="android:background">@drawable/abs__spinner_ab_holo_dark</item>
+    <style name="SelectedPhotosGridView">
+        <item name="android:horizontalSpacing">@dimen/selected_gridview_spacing</item>
+        <!--<item name="android:listSelector">@drawable/selectable_background_photup</item>-->
+        <item name="android:numColumns">auto_fit</item>
+        <item name="android:stretchMode">columnWidth</item>
+        <item name="android:verticalSpacing">@dimen/selected_gridview_spacing</item>
+        <item name="android:layout_marginTop">0dp</item>
     </style>
+
+    <style name="PhotupSpinner">
+        <item name="android:background">@drawable/spinner_bg</item>
+    </style>
+
+    <!-- 底部弹出popupwindow style -->
+    <style name="popupAnimation" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/in</item>
+        <item name="android:windowExitAnimation">@anim/out</item>
+    </style>
+
+    <style name="Theme.Fullscreen" parent="TintinShareTheme">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+    <style name="Theme.FullscreenOverlay" parent="Theme.Sherlock">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="actionBarStyle">@style/photup_translucent_ActionBar</item>
+        <item name="android:actionBarStyle">@style/photup_translucent_ActionBar</item>
+    </style>
+
+    <style name="photup_transparent_ActionBar" parent="@style/Widget.Sherlock.ActionBar">
+        <!--<item name="background">@drawable/ab_transparent_photup</item>-->
+        <!--<item name="progressBarStyle">@style/photup_ProgressBar</item>-->
+        <!--<item name="android:background">@drawable/ab_transparent_photup</item>-->
+        <!--<item name="android:progressBarStyle">@style/photup_ProgressBar</item>-->
+    </style>
+
+    <style name="photup_translucent_ActionBar" parent="@style/photup_transparent_ActionBar">
+        <item name="background">@color/translucent_dk_grey</item>
+        <item name="backgroundStacked">@color/translucent_dk_grey</item>
+        <item name="backgroundSplit">@color/translucent_dk_grey</item>
+        <item name="android:background">@color/translucent_dk_grey</item>
+        <item name="android:backgroundStacked">@color/translucent_dk_grey</item>
+        <item name="android:backgroundSplit">@color/translucent_dk_grey</item>
+    </style>
+
+
 </resources>

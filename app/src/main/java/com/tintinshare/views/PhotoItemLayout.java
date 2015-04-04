@@ -20,13 +20,8 @@ import com.tintinshare.model.Photo;
 public class PhotoItemLayout extends CheckableFrameLayout implements View.OnClickListener {
     private final PhotoImageView mImageView;
     private final CheckableImageView mButton;
-    //private final TextView mCaptionText;
-
     private Photo mSelection;
-
     private boolean mAnimateCheck = true;
-    private boolean mShowCaption = false;
-
     private final PhotoController mController;
 
     public PhotoItemLayout(Context context, AttributeSet attrs) {
@@ -37,7 +32,6 @@ public class PhotoItemLayout extends CheckableFrameLayout implements View.OnClic
         mController = PhotoApplication.getApplication(context).getPhotoUploadController();
 
         mImageView = (PhotoImageView) findViewById(R.id.iv_photo);
-      //  mCaptionText = (TextView) findViewById(R.id.tv_photo_caption);
 
         mButton = (CheckableImageView) findViewById(R.id.civ_button);
         mButton.setOnClickListener(this);
@@ -59,10 +53,6 @@ public class PhotoItemLayout extends CheckableFrameLayout implements View.OnClic
             mButton.setVisibility(View.GONE);
             mButton.setOnClickListener(null);
         }
-    }
-
-    public void setShowCaption(boolean show) {
-        mShowCaption = show;
     }
 
     public void onClick(View v) {
@@ -104,16 +94,6 @@ public class PhotoItemLayout extends CheckableFrameLayout implements View.OnClic
         if (mSelection != selection) {
             mButton.clearAnimation();
             mSelection = selection;
-        }
-
-        if (mShowCaption) {
-//            String caption = mSelection.getCaption();
-//            if (TextUtils.isEmpty(caption)) {
-//                mCaptionText.setVisibility(View.GONE);
-//            } else {
-//                mCaptionText.setVisibility(View.VISIBLE);
-//                mCaptionText.setText(caption);
-//            }
         }
     }
 

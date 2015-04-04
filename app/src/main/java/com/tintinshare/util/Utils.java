@@ -2,27 +2,39 @@ package com.tintinshare.util;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.location.Location;
+import android.media.ExifInterface;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.util.FloatMath;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.ScaleAnimation;
 
+import com.lightbox.android.photoprocessing.PhotoProcessing;
 import com.lightbox.android.photoprocessing.utils.MediaUtils;
+import com.tintinshare.Constants;
 import com.tintinshare.Flags;
 import com.tintinshare.PhotoApplication;
 import com.tintinshare.R;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * Created by longjianlin on 15/3/19.
@@ -35,6 +47,79 @@ public class Utils {
         view.draw(canvas);
         return image;
     }
+
+    public static Animation createScaleAnimation(View view, int parentWidth, int parentHeight,
+                                                 int toX, int toY) {
+        // Difference in X and Y
+        final int diffX = toX - view.getLeft();
+        final int diffY = toY - view.getTop();
+
+        // Calculate actual distance using pythagors
+        float diffDistance = FloatMath.sqrt((toX * toX) + (toY * toY));
+        float parentDistance = FloatMath
+                .sqrt((parentWidth * parentWidth) + (parentHeight * parentHeight));
+
+        ScaleAnimation scaleAnimation = new ScaleAnimation(1f, 0f, 1f, 0f, Animation.ABSOLUTE,
+                diffX,
+                Animation.ABSOLUTE, diffY);
+        scaleAnimation.setFillAfter(true);
+        scaleAnimation.setInterpolator(new DecelerateInterpolator());
+        scaleAnimation.setDuration(Math.round(diffDistance / parentDistance
+                * Constants.SCALE_ANIMATION_DURATION_FULL_DISTANCE));
+
+        return scaleAnimation;
+    }
+
+    // And to convert the image URI to the direct file system path of the image
+    // file
+    public static String getPathFromContentUri(ContentResolver cr, Uri contentUri) {
+        if (Flags.DEBUG) {
+            Log.d("Utils", "Getting file path for Uri: " + contentUri);
+        }
+
+        String returnValue = null;
+
+        if (ContentResolver.SCHEME_CONTENT.equals(contentUri.getScheme())) {
+            // can post image
+            String[] proj = {MediaStore.Images.Media.DATA};
+            Cursor cursor = cr.query(contentUri, proj, null, null, null);
+
+            if (null != cursor) {
+                if (cursor.moveToFirst()) {
+                    returnValue = cursor
+                            .getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
+                }
+                cursor.close();
+            }
+        } else if (ContentResolver.SCHEME_FILE.equals(contentUri.getScheme())) {
+            returnValue = contentUri.getPath();
+        }
+
+        return returnValue;
+    }
+
+    public static int getOrientationFromContentUri(ContentResolver cr, Uri contentUri) {
+        int returnValue = 0;
+
+        if (ContentResolver.SCHEME_CONTENT.equals(contentUri.getScheme())) {
+            // can post image
+            String[] proj = {MediaStore.Images.Media.ORIENTATION};
+            Cursor cursor = cr.query(contentUri, proj, null, null, null);
+
+            if (null != cursor) {
+                if (cursor.moveToFirst()) {
+                    returnValue = cursor.getInt(cursor
+                            .getColumnIndexOrThrow(MediaStore.Images.Media.ORIENTATION));
+                }
+                cursor.close();
+            }
+        } else if (ContentResolver.SCHEME_FILE.equals(contentUri.getScheme())) {
+            returnValue = MediaUtils.getExifOrientation(contentUri.getPath());
+        }
+
+        return returnValue;
+    }
+
     public static Bitmap decodeImage(final ContentResolver resolver, final Uri uri,
                                      final int MAX_DIM)
             throws FileNotFoundException {
@@ -76,7 +161,48 @@ public class Utils {
         } else {
             bitmap = BitmapFactory.decodeStream(resolver.openInputStream(uri), null, o);
         }
+
+        if (null != bitmap) {
+            if (Flags.DEBUG) {
+                Log.d("Utils",
+                        "Resized bitmap to: " + bitmap.getWidth() + "x" + bitmap.getHeight());
+            }
+        }
+
         return bitmap;
+    }
+
+    public static Bitmap fineResizePhoto(final Bitmap bitmap, final int maxDimension) {
+        Utils.checkPhotoProcessingThread();
+
+        final int width = bitmap.getWidth();
+        final int height = bitmap.getHeight();
+        final int biggestDimension = Math.max(width, height);
+
+        if (biggestDimension <= maxDimension) {
+            return bitmap;
+        }
+
+        final float ratio = maxDimension / (float) biggestDimension;
+        Bitmap resized = PhotoProcessing
+                .resize(bitmap, Math.round(width * ratio), Math.round(height * ratio));
+        if (Flags.DEBUG) {
+            Log.d("Photo",
+                    "Finely resized to: " + resized.getWidth() + "x" + resized.getHeight());
+        }
+
+        return resized;
+    }
+
+    public static boolean hasCamera(Context context) {
+        PackageManager pm = context.getPackageManager();
+        return pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)
+                || pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT);
+    }
+
+    public static File getCameraPhotoFile() {
+        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        return new File(dir, "photo_" + System.currentTimeMillis() + ".jpg");
     }
 
     public static Bitmap rotate(Bitmap original, final int angle) {
@@ -103,66 +229,22 @@ public class Utils {
         return bitmap;
     }
 
-    public static int getOrientationFromContentUri(ContentResolver cr, Uri contentUri) {
-        int returnValue = 0;
-
-        if (ContentResolver.SCHEME_CONTENT.equals(contentUri.getScheme())) {
-            // can post image
-            String[] proj = {MediaStore.Images.Media.ORIENTATION};
-            Cursor cursor = cr.query(contentUri, proj, null, null, null);
-
-            if (null != cursor) {
-                if (cursor.moveToFirst()) {
-                    returnValue = cursor.getInt(cursor
-                            .getColumnIndexOrThrow(MediaStore.Images.Media.ORIENTATION));
-                }
-                cursor.close();
-            }
-        } else if (ContentResolver.SCHEME_FILE.equals(contentUri.getScheme())) {
-            returnValue = MediaUtils.getExifOrientation(contentUri.getPath());
-        }
-
-        return returnValue;
-    }
-
     public static void checkPhotoProcessingThread() {
-        if (!PhotoApplication.THREAD_FILTERS.equals(Thread.currentThread().getName())) {
-            throw new IllegalStateException("PhotoProcessing should be done on corrent thread!");
-        }
+//        if (!PhotoApplication.THREAD_FILTERS.equals(Thread.currentThread().getName())) {
+//            throw new IllegalStateException("PhotoProcessing should be done on corrent thread!");
+//        }
     }
 
-    public static boolean hasCamera(Context context) {
-        PackageManager pm = context.getPackageManager();
-        return pm.hasSystemFeature(PackageManager.FEATURE_CAMERA)
-                || pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT);
+    public static boolean newerThan(long compareTime, int threshold) {
+        return compareTime > (System.currentTimeMillis() - threshold);
     }
 
-    // And to convert the image URI to the direct file system path of the image
-    // file
-    public static String getPathFromContentUri(ContentResolver cr, Uri contentUri) {
-        if (Flags.DEBUG) {
-            Log.d("Utils", "Getting file path for Uri: " + contentUri);
+    public static String formatDistance(final int distance) {
+        if (distance < 1000) {
+            return distance + "m";
+        } else {
+            return String.format("%.2fkm", distance / 1000f);
         }
-
-        String returnValue = null;
-
-        if (ContentResolver.SCHEME_CONTENT.equals(contentUri.getScheme())) {
-            // can post image
-            String[] proj = {MediaStore.Images.Media.DATA};
-            Cursor cursor = cr.query(contentUri, proj, null, null, null);
-
-            if (null != cursor) {
-                if (cursor.moveToFirst()) {
-                    returnValue = cursor
-                            .getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
-                }
-                cursor.close();
-            }
-        } else if (ContentResolver.SCHEME_FILE.equals(contentUri.getScheme())) {
-            returnValue = contentUri.getPath();
-        }
-
-        return returnValue;
     }
 
     public static void scanMediaJpegFile(final Context context, final File file,
@@ -172,16 +254,30 @@ public class Utils {
                         listener);
     }
 
-    public static File getCameraPhotoFile() {
-        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-        return new File(dir, "photo_" + System.currentTimeMillis() + ".jpg");
-    }
-
     public static int getSpinnerItemResId() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             return android.R.layout.simple_spinner_item;
         } else {
             return R.layout.layout_spinner_item;
         }
+    }
+
+    public static Location getExifLocation(String filepath) {
+        Location location = null;
+
+        try {
+            final ExifInterface exif = new ExifInterface(filepath);
+            final float[] latLong = new float[2];
+
+            if (exif.getLatLong(latLong)) {
+                location = new Location("");
+                location.setLatitude(latLong[0]);
+                location.setLongitude(latLong[1]);
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return location;
     }
 }

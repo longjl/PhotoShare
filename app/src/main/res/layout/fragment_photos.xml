@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/divider_color">
+    android:background="#16191A">
 
     <GridView
         android:id="@+id/gv_photos"
@@ -11,27 +11,29 @@
         android:layout_height="match_parent"
         android:columnWidth="@dimen/gridview_item_dimension_user" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:layout_alignParentBottom="true"
-        android:visibility="gone"
-        android:gravity="right|center"
-        android:minHeight="50dp"
+        android:background="@drawable/spinner_bg"
         android:orientation="horizontal">
 
         <Spinner
             android:id="@+id/sp_buckets"
-            style="@style/PhotupSpinner"
-            android:layout_width="0dp"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
+            android:background="@drawable/abs__spinner_ab_holo_dark"
+            android:drawSelectorOnTop="true" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="right"
-            android:orientation="horizontal">
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal"
+            android:paddingRight="10dp">
 
             <TextView
                 android:id="@+id/tv_count"
@@ -39,14 +41,33 @@
                 android:layout_height="wrap_content"
                 android:paddingRight="2sp"
                 android:text="0"
-                android:textSize="20sp" />
+                android:textColor="@color/white"
+                android:textSize="24sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingRight="10dp"
-                android:text="张"
-                android:textSize="20sp" />
+                android:paddingLeft="5dp"
+                android:text="["
+                android:textColor="@color/action_bar_color"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/tv_selected_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/action_bar_color"
+                android:textSize="24sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="5dp"
+                android:text="]"
+                android:textColor="@color/action_bar_color"
+                android:textSize="24sp" />
+
         </LinearLayout>
-    </LinearLayout>
+    </RelativeLayout>
 </RelativeLayout>
