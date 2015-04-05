@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".TintinShareActivity">
+    <item
+        android:id="@+id/action_bucket"
+        android:icon="@drawable/abs__spinner_ab_disabled_holo_dark"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_bucket"
+        android:visible="false" />
+    <item
+        android:id="@+id/action_share"
+        android:actionLayout="@layout/layout_action_share"
+        android:showAsAction="ifRoom"
+        android:title="@string/action_share"
+        android:visible="false" />
+</menu>
+

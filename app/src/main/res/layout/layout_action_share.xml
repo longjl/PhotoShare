@@ -14,7 +14,7 @@
   ~ limitations under the License.
   -->
 
-<com.tintinshare.views.ShareActionBarView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.photoshare.views.ShareActionBarView xmlns:android="http://schemas.android.com/apk/res/android"
     style="?attr/actionButtonStyle"
     android:layout_width="wrap_content"
     android:layout_height="match_parent">
@@ -38,4 +38,4 @@
         android:paddingRight="12dp"
         android:src="@drawable/abs__ic_menu_share_holo_dark" />
 
-</com.tintinshare.views.ShareActionBarView>
+</com.photoshare.views.ShareActionBarView>

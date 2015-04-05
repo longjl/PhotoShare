@@ -17,9 +17,8 @@
     </style>
 
     <style name="TintinShareActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <!--<item name="android:background">@drawable/action_bar_bg</item>-->
-        <item name="background">@color/actionbar_color</item>
-        <item name="android:background">@color/actionbar_color</item>
+        <item name="background">@drawable/actionbar_bg</item>
+        <item name="android:background">@drawable/actionbar_bg</item>
         <item name="android:titleTextStyle">@style/TitleTextStyle</item>
     </style>
 

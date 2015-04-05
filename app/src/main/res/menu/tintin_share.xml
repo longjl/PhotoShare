@@ -1,9 +1,0 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".TintinShareActivity">
-    <item
-        android:id="@+id/action_share"
-        android:actionLayout="@layout/layout_action_share"
-        android:showAsAction="ifRoom"
-        android:title="@string/action_share" />
-</menu>
