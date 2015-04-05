@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.view.Gravity;
@@ -32,6 +34,7 @@ import com.photoshare.events.PhotoSelectionAddedEvent;
 import com.photoshare.events.PhotoSelectionRemovedEvent;
 import com.photoshare.events.ShareEvent;
 import com.photoshare.model.Photo;
+import com.photoshare.util.PhotoDatabaseHelper;
 import com.photoshare.util.ShareUtils;
 import com.photoshare.util.Utils;
 
@@ -122,17 +125,29 @@ public class SelectedPhotosFragment extends SherlockFragment
         if (platform.equals("SinaWeibo")) {
             if (app.uninstallSoftware(getActivity(), "com.sina.weibo")) {
                 ShareUtils.share(getActivity(), platform, mPhotoSelectionController.getSelected(), getContentForText());
+                handler.sendEmptyMessageDelayed(0, 3000);
             } else {
                 Toast.makeText(getActivity(), R.string.sina_weibo_exception, Toast.LENGTH_SHORT).show();
             }
         } else if (platform.equals("WebChatMoments")) {
             if (app.uninstallSoftware(getActivity(), "com.tencent.mm")) {
                 ShareUtils.share(getActivity(), platform, mPhotoSelectionController.getSelected(), getContentForText());
+                handler.sendEmptyMessageDelayed(0, 3000);
             } else {
                 Toast.makeText(getActivity(), R.string.WebChat_Moments_exception, Toast.LENGTH_SHORT).show();
             }
         }
     }
+
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            //保存记录
+            PhotoDatabaseHelper.saveRecordToDatabase(getActivity(), mPhotoSelectionController.getSelected(), getContentForText());
+        }
+    };
+
 
     private String getContentForText() {
         if (et_content.getText() != null && !et_content.getText().toString().isEmpty()) {

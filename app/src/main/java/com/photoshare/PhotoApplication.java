@@ -22,8 +22,6 @@ public class PhotoApplication extends Application {
     public static final String THREAD_FILTERS = "filters_thread";
     static final float EXECUTOR_POOL_SIZE_PER_CORE = 1.5f;
     private ExecutorService mMultiThreadExecutor, mSingleThreadExecutor, mDatabaseThreadExecutor;
-
-
     private BitmapLruCache mImageCache;
     private PhotoController mPhotoController;
 
@@ -99,7 +97,7 @@ public class PhotoApplication extends Application {
      * @param packageName
      * @return
      */
-    public  boolean uninstallSoftware(Context context, String packageName) {
+    public boolean uninstallSoftware(Context context, String packageName) {
         PackageManager packageManager = context.getPackageManager();
         try {
             PackageInfo pInfo = packageManager.getPackageInfo(packageName,

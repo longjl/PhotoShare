@@ -7,6 +7,7 @@ import com.photoshare.util.Analytics;
  * Created by longjianlin on 15/3/19.
  */
 public class PhotoFragmentActivity extends SherlockFragmentActivity {
+
     @Override
     protected void onStart() {
         super.onStart();

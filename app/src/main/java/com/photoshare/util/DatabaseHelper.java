@@ -1,6 +1,7 @@
 package com.photoshare.util;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -10,6 +11,7 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.photoshare.Flags;
 import com.photoshare.model.Photo;
+import com.photoshare.model.Record;
 
 import java.sql.SQLException;
 
@@ -17,12 +19,12 @@ import java.sql.SQLException;
  * Created by longjianlin on 15/3/19.
  */
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
-    private static final Class<?>[] DATA_CLASSES = {Photo.class};
-    public static final String DATABASE_NAME = "/sdcard/tt/photo.db";      //数据库名字
+    private static final Class<?>[] DATA_CLASSES = {Photo.class, Record.class};
+    public static final String DATABASE_NAME = "/sdcard/photoshare/photo.db";      //数据库名字
     private static final int DATABASE_VERSION = 1;             //版本号
 
     private Dao<Photo, String> mPhotoDao = null;
-
+    private Dao<Record, Integer> mRecordDao = null;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -77,12 +79,20 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return mPhotoDao;
     }
 
+    public Dao<Record, Integer> getRecordDao() throws SQLException {
+        if (mRecordDao == null) {
+            mRecordDao = getDao(Record.class);
+        }
+        return mRecordDao;
+    }
+
     /**
      * Close the database connections and clear any cached DAOs.
      */
     @Override
     public void close() {
         mPhotoDao = null;
+        mRecordDao = null;
         super.close();
     }
 }

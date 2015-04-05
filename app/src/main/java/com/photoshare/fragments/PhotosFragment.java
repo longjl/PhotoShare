@@ -26,31 +26,27 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.photoshare.Constants;
 import com.photoshare.Flags;
+import com.photoshare.PhotoApplication;
 import com.photoshare.PhotoController;
 import com.photoshare.R;
 import com.photoshare.activities.PhotoViewerActivity;
 import com.photoshare.adapters.BucketAdapter;
 import com.photoshare.adapters.CameraBaseAdapter;
 import com.photoshare.adapters.PhotosCursorAdapter;
-import com.photoshare.adapters.ShareAdapter;
 import com.photoshare.events.BucketEvent;
 import com.photoshare.events.PhotoSelectionAddedEvent;
 import com.photoshare.events.PhotoSelectionErrorEvent;
 import com.photoshare.events.PhotoSelectionRemovedEvent;
-import com.photoshare.events.ShareEvent;
 import com.photoshare.model.MediaStoreBucket;
 import com.photoshare.model.Photo;
 import com.photoshare.tasks.MediaStoreBucketsAsyncTask;
@@ -104,6 +100,7 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
         }
     }
 
+    public static final String PREF_SELECTED_MEDIA_BUCKET_ID = "selected_media_store_bucket";
     static final int RESULT_CAMERA = 101;
     static final String SAVE_PHOTO_URI = "camera_photo_uri";
 
@@ -169,10 +166,8 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
         if (null != buckets && !buckets.isEmpty()) {
             mBuckets.clear();
             mBuckets.addAll(buckets);
-            //mBucketAdapter.notifyDataSetChanged();
-
             bucketAdapter.notifyDataSetChanged();
-            // setSelectedBucketFromPrefs();
+            loadBucketId(getSelectedBucketFromPrefs());
         }
     }
 
@@ -187,10 +182,6 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
         }
         mPhotoAdapter = new PhotosCursorAdapter(getActivity(), null);
         mAdapter.addAdapter(mPhotoAdapter);
-
-        //mBucketAdapter = new ArrayAdapter<MediaStoreBucket>(getActivity(),R.layout.layout_spinner_item, mBuckets);
-        //mBucketAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
         EventBus.getDefault().register(this);
     }
 
@@ -207,7 +198,7 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
                     selection = MediaStore.Images.Media.BUCKET_ID + " = ?";
                     selectionArgs = new String[]{bundle.getString(LOADER_PHOTOS_BUCKETS_PARAM)};
                 }
-
+                setSelectedBucketToPrefs(bundle.getString(LOADER_PHOTOS_BUCKETS_PARAM));
                 cursorLoader = new PhotoCursorLoader(getActivity(),
                         MediaStoreCursorHelper.MEDIA_STORE_CONTENT_URI,
                         MediaStoreCursorHelper.PHOTOS_PROJECTION, selection, selectionArgs,
@@ -226,16 +217,20 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
         mPhotoGrid.setAdapter(mAdapter);
         mPhotoGrid.setOnItemClickListener(this);
         initPopupWindow();
-        loadBucketId(null);
         return view;
     }
 
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-        saveSelectedBucketToPrefs();
     }
 
     public void onItemClick(AdapterView<?> gridView, View view, int position, long id) {
@@ -260,8 +255,7 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
             intent.putExtra(PhotoViewerActivity.EXTRA_POSITION, position - 1);
             intent.putExtra(PhotoViewerActivity.EXTRA_MODE, PhotoViewerActivity.MODE_ALL_VALUE);
 
-            MediaStoreBucket bucket = bucketAdapter.getItem(position);
-            intent.putExtra(PhotoViewerActivity.EXTRA_BUCKET_ID, bucket.getId());
+            intent.putExtra(PhotoViewerActivity.EXTRA_BUCKET_ID, getSelectedBucketFromPrefs());
             ActivityCompat.startActivity(getActivity(), intent, b);
         }
     }
@@ -371,15 +365,6 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
         MediaStoreBucketsAsyncTask.execute(getActivity(), this);
     }
 
-    public void selectAll() {
-        Cursor cursor = mPhotoAdapter.getCursor();
-        if (null != cursor) {
-            ArrayList<Photo> selections = MediaStoreCursorHelper.photosCursorToSelectionList(
-                    MediaStoreCursorHelper.MEDIA_STORE_CONTENT_URI, cursor);
-            mPhotoSelectionController.addSelections(selections);
-        }
-    }
-
     private MediaStoreBucket getSelectedBucket() {
         if (null != lv_bucket) {
             return (MediaStoreBucket) lv_bucket.getSelectedItem();
@@ -403,13 +388,17 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
         }
     }
 
-    private void saveSelectedBucketToPrefs() {
-        MediaStoreBucket bucket = getSelectedBucket();
-        if (null != bucket && null != mPrefs) {
-            mPrefs.edit()
-                    .putString(Constants.PREF_SELECTED_MEDIA_BUCKET_ID, bucket.getId())
-                    .commit();
+    private void setSelectedBucketToPrefs(String bucket_id) {
+        if (null != mPrefs) {
+            mPrefs.edit().putString(Constants.PREF_SELECTED_MEDIA_BUCKET_ID, bucket_id).commit();
         }
+    }
+
+    private String getSelectedBucketFromPrefs() {
+        if (null != mPrefs) {
+            return mPrefs.getString(PREF_SELECTED_MEDIA_BUCKET_ID, null);
+        }
+        return null;
     }
 
     /**
