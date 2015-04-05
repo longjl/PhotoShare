@@ -1,2 +1,3 @@
-# TintinShare
-丁丁分享
+# PhotoShare
+
+图片分享
