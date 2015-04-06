@@ -1,6 +1,7 @@
 package com.photoshare.fragments;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,6 +12,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,16 +32,25 @@ import com.photoshare.R;
 import com.photoshare.activities.PhotoViewerActivity;
 import com.photoshare.adapters.SelectedPhotosBaseAdapter;
 import com.photoshare.adapters.ShareAdapter;
+import com.photoshare.dao.RecordDatabaseHelper;
 import com.photoshare.events.PhotoSelectionAddedEvent;
 import com.photoshare.events.PhotoSelectionRemovedEvent;
 import com.photoshare.events.ShareEvent;
+import com.photoshare.model.History;
 import com.photoshare.model.Photo;
-import com.photoshare.util.PhotoDatabaseHelper;
+import com.photoshare.dao.PhotoDatabaseHelper;
+import com.photoshare.model.Record;
+import com.photoshare.tasks.PhotoThreadRunnable;
 import com.photoshare.util.ShareUtils;
 import com.photoshare.util.Utils;
 
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Toast;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import de.greenrobot.event.EventBus;
 
@@ -49,6 +60,7 @@ import de.greenrobot.event.EventBus;
 public class SelectedPhotosFragment extends SherlockFragment
         implements AdapterView.OnItemClickListener,
         SwipeDismissListViewTouchListener.OnDismissCallback, View.OnClickListener {
+    private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     private GridView mGridView;
     private EditText et_content;
@@ -122,29 +134,78 @@ public class SelectedPhotosFragment extends SherlockFragment
 
     private void uninstallSoftware(String platform) {
         PhotoApplication app = PhotoApplication.getApplication(getActivity());
+        if (mPhotoSelectionController.getSelectedCount() == 0) {
+            Toast.makeText(getActivity(), "不能没有图片", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (platform.equals("SinaWeibo")) {
             if (app.uninstallSoftware(getActivity(), "com.sina.weibo")) {
-                ShareUtils.share(getActivity(), platform, mPhotoSelectionController.getSelected(), getContentForText());
-                handler.sendEmptyMessageDelayed(0, 3000);
+                handler.sendEmptyMessage(0);
+
+                Message message = new Message();
+                message.obj = platform;
+                message.what = 200;
+                shareHandler.sendMessage(message);
             } else {
                 Toast.makeText(getActivity(), R.string.sina_weibo_exception, Toast.LENGTH_SHORT).show();
             }
         } else if (platform.equals("WebChatMoments")) {
             if (app.uninstallSoftware(getActivity(), "com.tencent.mm")) {
-                ShareUtils.share(getActivity(), platform, mPhotoSelectionController.getSelected(), getContentForText());
-                handler.sendEmptyMessageDelayed(0, 3000);
+                handler.sendEmptyMessage(0);
+
+                Message message = new Message();
+                message.obj = platform;
+                message.what = 200;
+                shareHandler.sendMessage(message);
             } else {
                 Toast.makeText(getActivity(), R.string.WebChat_Moments_exception, Toast.LENGTH_SHORT).show();
             }
         }
     }
 
+    //分享Handler
+    private Handler shareHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            final String platform = msg.obj.toString();
+            switch (msg.what) {
+                case 200:
+                    ShareUtils.share(getActivity(), platform, mPhotoSelectionController.getSelected(), getContentForText());
+                    break;
+            }
+        }
+    };
 
+    //将Photo 数据保存到数据库 Handler
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
+            Record record = new Record();
+            record.acc_id = "1234567890";
+            record.content = getContentForText();
+            record.date = format.format(new Date());
+
+            List<History> histories = new ArrayList<History>();
+            for (Photo photo : mPhotoSelectionController.getSelected()) {
+                History history = new History();
+                history.mAccountId = photo.mAccountId;
+                history.mCompletedDetection = photo.mCompletedDetection;
+                history.mUserRotation = photo.mUserRotation;
+                history.mFilter = photo.mFilter;
+                history.mCropLeft = photo.mCropLeft;
+                history.mCropTop = photo.mCropTop;
+                history.mCropRight = photo.mCropRight;
+                history.mCropBottom = photo.mCropBottom;
+                history.mAccountId = photo.mAccountId;
+                history.mTargetId = photo.mTargetId;
+                history.mQuality = photo.mQuality;
+                history.mResultPostId = photo.mResultPostId;
+                history.mState = photo.mState;
+                history.mFullUriString = photo.mFullUriString;
+                histories.add(history);
+            }
             //保存记录
-            PhotoDatabaseHelper.saveRecordToDatabase(getActivity(), mPhotoSelectionController.getSelected(), getContentForText());
+            //RecordDatabaseHelper.saveRecordToDatabase(getActivity(), record, histories);
         }
     };
 
@@ -235,5 +296,11 @@ public class SelectedPhotosFragment extends SherlockFragment
 
     public void onEvent(ShareEvent event) {
         showPopupWindow();
+    }
+
+    private ProgressDialog dialog;
+
+    private void showProgressDialog() {
+        dialog = ProgressDialog.show(getActivity(), "", "数据传输中. 请稍等...", true, false);
     }
 }

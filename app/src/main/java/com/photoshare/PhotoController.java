@@ -8,7 +8,7 @@ import com.photoshare.events.PhotoSelectionErrorEvent;
 import com.photoshare.events.PhotoSelectionRemovedEvent;
 import com.photoshare.events.ShareEvent;
 import com.photoshare.model.Photo;
-import com.photoshare.util.PhotoDatabaseHelper;
+import com.photoshare.dao.PhotoDatabaseHelper;
 
 import java.util.ArrayList;
 import java.util.HashSet;

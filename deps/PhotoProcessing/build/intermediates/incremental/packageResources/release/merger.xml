@@ -2,9 +2,9 @@
 <merger version="2" >
 
     <dataSet config="main" >
-        <source path="/Users/longjianlin/Documents/longjl-dev/TintinShare/deps/PhotoProcessing/res" >
+        <source path="/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/res" >
             <file
-                path="/Users/longjianlin/Documents/longjl-dev/TintinShare/deps/PhotoProcessing/res/values/strings.xml"
+                path="/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/res/values/strings.xml"
                 qualifiers="" >
                 <string name="toast_hint_edit" >Flip/rotate the photo
                 </string>
@@ -66,11 +66,11 @@
                 </string>
             </file>
         </source>
-        <source path="/Users/longjianlin/Documents/longjl-dev/TintinShare/deps/PhotoProcessing/build/generated/res/rs/release" />
-        <source path="/Users/longjianlin/Documents/longjl-dev/TintinShare/deps/PhotoProcessing/build/generated/res/generated/release" />
+        <source path="/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/build/generated/res/rs/release" />
+        <source path="/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/build/generated/res/generated/release" />
     </dataSet>
     <dataSet config="release" >
-        <source path="/Users/longjianlin/Documents/longjl-dev/TintinShare/deps/PhotoProcessing/src/release/res" />
+        <source path="/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/src/release/res" />
     </dataSet>
 
 </merger>

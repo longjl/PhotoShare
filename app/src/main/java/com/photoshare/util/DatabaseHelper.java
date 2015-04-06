@@ -10,6 +10,8 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.photoshare.Flags;
+import com.photoshare.model.Account;
+import com.photoshare.model.History;
 import com.photoshare.model.Photo;
 import com.photoshare.model.Record;
 
@@ -19,12 +21,14 @@ import java.sql.SQLException;
  * Created by longjianlin on 15/3/19.
  */
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
-    private static final Class<?>[] DATA_CLASSES = {Photo.class, Record.class};
+    private static final Class<?>[] DATA_CLASSES = {Photo.class, Record.class, Account.class, History.class};
     public static final String DATABASE_NAME = "/sdcard/photoshare/photo.db";      //数据库名字
     private static final int DATABASE_VERSION = 1;             //版本号
 
     private Dao<Photo, String> mPhotoDao = null;
     private Dao<Record, Integer> mRecordDao = null;
+    private Dao<Account, Integer> mAccountDao = null;
+    private Dao<History, Integer> mHistoryDao = null;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -72,6 +76,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+    /**
+     * Photo dao
+     *
+     * @return
+     * @throws SQLException
+     */
     public Dao<Photo, String> getPhotoDao() throws SQLException {
         if (mPhotoDao == null) {
             mPhotoDao = getDao(Photo.class);
@@ -79,6 +89,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return mPhotoDao;
     }
 
+    /**
+     * Record dao
+     *
+     * @return
+     * @throws SQLException
+     */
     public Dao<Record, Integer> getRecordDao() throws SQLException {
         if (mRecordDao == null) {
             mRecordDao = getDao(Record.class);
@@ -87,12 +103,42 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     /**
+     * Account dao
+     *
+     * @return
+     * @throws SQLException
+     */
+    public Dao<Account, Integer> getAccountDao() throws SQLException {
+        if (mAccountDao == null) {
+            mAccountDao = getDao(Account.class);
+        }
+        return mAccountDao;
+    }
+
+
+    /**
+     * Account dao
+     *
+     * @return
+     * @throws SQLException
+     */
+    public Dao<History, Integer> getHistoryDao() throws SQLException {
+        if (mHistoryDao == null) {
+            mHistoryDao = getDao(History.class);
+        }
+        return mHistoryDao;
+    }
+
+
+    /**
      * Close the database connections and clear any cached DAOs.
      */
     @Override
     public void close() {
         mPhotoDao = null;
         mRecordDao = null;
+        mAccountDao = null;
+        mHistoryDao = null;
         super.close();
     }
 }

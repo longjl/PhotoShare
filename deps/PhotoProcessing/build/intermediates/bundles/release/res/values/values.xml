@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- From: file:/Users/longjianlin/Documents/longjl-dev/TintinShare/deps/PhotoProcessing/res/values/strings.xml -->
+    <!-- From: file:/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/res/values/strings.xml -->
     <eat-comment />
 
     <string name="app_name">PhotoProcessing</string>

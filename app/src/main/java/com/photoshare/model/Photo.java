@@ -69,7 +69,6 @@ public class Photo {
     static final String FIELD_TARGET_ID = "target_id";
     static final String FIELD_QUALITY = "quality";          //清晰度
     static final String FIELD_RESULT_POST_ID = "r_post_id";
-    static final String FIELD_CAPTION = "caption";          //字幕
 
     static final float CROP_THRESHOLD = 0.01f; // 1%
     static final int MINI_THUMBNAIL_SIZE = 300;
@@ -81,42 +80,40 @@ public class Photo {
      * Edit Variables
      */
     @DatabaseField(columnName = FIELD_COMPLETED_DETECTION)
-    private boolean mCompletedDetection;
+    public boolean mCompletedDetection;
     @DatabaseField(columnName = FIELD_USER_ROTATION)
-    private int mUserRotation;
+    public int mUserRotation;
     @DatabaseField(columnName = FIELD_FILTER)
-    private Filter mFilter;
+    public Filter mFilter;
     @DatabaseField(columnName = FIELD_CROP_L)
-    private float mCropLeft;
+    public float mCropLeft;
     @DatabaseField(columnName = FIELD_CROP_T)
-    private float mCropTop;
+    public float mCropTop;
     @DatabaseField(columnName = FIELD_CROP_R)
-    private float mCropRight;
+    public float mCropRight;
     @DatabaseField(columnName = FIELD_CROP_B)
-    private float mCropBottom;
+    public float mCropBottom;
 
     /**
      * Upload Variables
      */
     @DatabaseField(columnName = FIELD_ACCOUNT_ID)
-    private String mAccountId;
+    public String mAccountId;
     @DatabaseField(columnName = FIELD_TARGET_ID)
-    private String mTargetId;
+    public String mTargetId;
     @DatabaseField(columnName = FIELD_QUALITY)
-    private UploadQuality mQuality;
+    public UploadQuality mQuality;
     @DatabaseField(columnName = FIELD_RESULT_POST_ID)
-    private String mResultPostId;
+    public String mResultPostId;
     @DatabaseField(columnName = FIELD_STATE)
-    private int mState;
-    @DatabaseField(columnName = FIELD_CAPTION)
-    private String mCaption;
+    public int mState;
 
     /**
      * Uri and Database Key
      */
-    private Uri mFullUri;
+    public Uri mFullUri;
     @DatabaseField(columnName = FIELD_URI, id = true)
-    private String mFullUriString;
+    public String mFullUriString;
 
 
     private HashSet<PhotoTag> mTags;
@@ -183,7 +180,6 @@ public class Photo {
     public void reset() {
         mState = STATE_NONE;
         mUserRotation = 0;
-        mCaption = null;
         mCropLeft = mCropTop = MIN_CROP_VALUE;
         mCropRight = mCropBottom = MAX_CROP_VALUE;
         mFilter = null;
@@ -308,16 +304,15 @@ public class Photo {
 
     public Bitmap getThumbnailImage(Context context) {
         if (ContentResolver.SCHEME_CONTENT.equals(getOriginalPhotoUri().getScheme())) {
-            return getThumbnailImageFromMediaStore(context);
+            // return getThumbnailImageFromMediaStore(context);
         }
 
-        final Resources res = context.getResources();
-        int size = res.getBoolean(R.bool.load_mini_thumbnails) ? MINI_THUMBNAIL_SIZE
-                : MICRO_THUMBNAIL_SIZE;
+       /* final Resources res = context.getResources();
+        int size = res.getBoolean(R.bool.load_mini_thumbnails) ? MINI_THUMBNAIL_SIZE: MICRO_THUMBNAIL_SIZE;
         if (size == MINI_THUMBNAIL_SIZE && res.getBoolean(R.bool.sample_mini_thumbnails)) {
             size /= 2;
-        }
-
+        }*/
+        int size = 200;
         try {
             Bitmap bitmap = Utils
                     .decodeImage(context.getContentResolver(), getOriginalPhotoUri(), size);
@@ -633,6 +628,7 @@ public class Photo {
     public void setTagChangedListener(OnPhotoTagsChangedListener tagChangedListener) {
         mTagChangedListener = new WeakReference<OnPhotoTagsChangedListener>(tagChangedListener);
     }
+
     public List<PhotoTag> getPhotoTags() {
         if (null != mTags) {
             return new ArrayList<PhotoTag>(mTags);

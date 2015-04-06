@@ -2,12 +2,12 @@
 <merger version="2" >
 
     <dataSet config="20.0.0" >
-        <source path="/Users/longjianlin/Documents/longjl-dev/TintinShare/deps/PhotoProcessing/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/res" />
+        <source path="/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/res" />
     </dataSet>
     <dataSet config="main" >
-        <source path="/Users/longjianlin/Documents/longjl-dev/TintinShare/deps/PhotoProcessing/res" >
+        <source path="/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/res" >
             <file
-                path="/Users/longjianlin/Documents/longjl-dev/TintinShare/deps/PhotoProcessing/res/values/strings.xml"
+                path="/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/res/values/strings.xml"
                 qualifiers="" >
                 <string name="toast_hint_edit" >Flip/rotate the photo
                 </string>
@@ -69,11 +69,11 @@
                 </string>
             </file>
         </source>
-        <source path="/Users/longjianlin/Documents/longjl-dev/TintinShare/deps/PhotoProcessing/build/generated/res/rs/debug" />
-        <source path="/Users/longjianlin/Documents/longjl-dev/TintinShare/deps/PhotoProcessing/build/generated/res/generated/debug" />
+        <source path="/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/build/generated/res/rs/debug" />
+        <source path="/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/build/generated/res/generated/debug" />
     </dataSet>
     <dataSet config="debug" >
-        <source path="/Users/longjianlin/Documents/longjl-dev/TintinShare/deps/PhotoProcessing/src/debug/res" />
+        <source path="/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/src/debug/res" />
     </dataSet>
 
 </merger>

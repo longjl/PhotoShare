@@ -142,6 +142,7 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
                 if (null != mPhotoFile) {
                     if (resultCode == Activity.RESULT_OK) {
                         Utils.scanMediaJpegFile(getActivity(), mPhotoFile, this);
+                        loadBucketId(getSelectedBucketFromPrefs());
                     } else {
                         if (Flags.DEBUG) {
                             Log.d("UserPhotosFragment", "Deleting Photo File");
@@ -412,7 +413,6 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
             startActivityForResult(takePictureIntent, RESULT_CAMERA);
         }
     }
-
 
     /**
      * 初始化

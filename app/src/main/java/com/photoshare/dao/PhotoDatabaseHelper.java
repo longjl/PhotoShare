@@ -1,4 +1,4 @@
-package com.photoshare.util;
+package com.photoshare.dao;
 
 import android.content.Context;
 
@@ -10,6 +10,7 @@ import com.photoshare.PhotoApplication;
 import com.photoshare.model.Photo;
 import com.photoshare.model.Record;
 import com.photoshare.tasks.PhotoThreadRunnable;
+import com.photoshare.util.DatabaseHelper;
 
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -183,49 +184,5 @@ public class PhotoDatabaseHelper {
                 });
     }
 
-    private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-    /**
-     * 保存图片记录
-     *
-     * @param context
-     * @param selectPhoto
-     * @param content
-     */
-    public static void saveRecordToDatabase(final Context context, List<Photo> selectPhoto, String content) {
-        final ArrayList<Record> records = new ArrayList<Record>();
-        String date = format.format(new Date());
-        for (Photo photo : selectPhoto) {
-            Record record = new Record();
-            record.content = content;
-            record.uri = photo.getOriginalPhotoUri().toString();
-            record.date = date;
-            records.add(record);
-        }
-        PhotoApplication.getApplication(context).getDatabaseThreadExecutorService()
-                .submit(new PhotoThreadRunnable() {
-
-                    public void runImpl() {
-                        final DatabaseHelper helper = getHelper(context);
-                        try {
-                            final Dao<Record, Integer> dao = helper.getRecordDao();
-                            dao.callBatchTasks(new Callable<Void>() {
-                                public Void call() throws Exception {
-                                    for (Record record : records) {
-                                        dao.createOrUpdate(record);
-                                    }
-                                    return null;
-                                }
-                            });
-                        } catch (Exception e) {
-                            if (Flags.DEBUG) {
-                                e.printStackTrace();
-                            }
-                        } finally {
-                            OpenHelperManager.releaseHelper();
-                        }
-                    }
-                });
-    }
 
 }

@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/deps/PhotoProcessing/PhotoProcessing.iml" filepath="$PROJECT_DIR$/deps/PhotoProcessing/PhotoProcessing.iml" />
       <module fileurl="file://$PROJECT_DIR$/PhotoShare.iml" filepath="$PROJECT_DIR$/PhotoShare.iml" />
-      <module fileurl="file://$PROJECT_DIR$/TintinShare.iml" filepath="$PROJECT_DIR$/TintinShare.iml" />
       <module fileurl="file://$PROJECT_DIR$/deps/actionbarsherlock/actionbarsherlock.iml" filepath="$PROJECT_DIR$/deps/actionbarsherlock/actionbarsherlock.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
