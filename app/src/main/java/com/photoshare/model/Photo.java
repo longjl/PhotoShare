@@ -488,8 +488,7 @@ public class Photo {
     }
 
     public File getUploadSaveFile() {
-        File dir = new File(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+        File dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
                 "photo");
         if (!dir.exists()) {
             dir.mkdirs();

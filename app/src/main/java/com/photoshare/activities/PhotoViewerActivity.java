@@ -283,8 +283,8 @@ public class PhotoViewerActivity extends PhotoFragmentActivity implements OnSing
         mFadeOutAnimation = AnimationUtils.loadAnimation(this, R.anim.photo_fade_out);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(false);
-        getSupportActionBar().setTitle(R.string.edit_photo);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         /**
          * Nasty hack, basically we need to know when the ViewPager is laid out,

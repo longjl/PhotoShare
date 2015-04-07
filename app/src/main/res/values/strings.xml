@@ -2,8 +2,12 @@
 <resources>
 
     <string name="app_name">图片分享</string>
+    <string name="app_title">%1$d</string>
+
+
     <string name="action_share">分享</string>
     <string name="action_bucket">图片分类</string>
+    <string name="action_share_record">分享记录</string>
 
     <!-- Filter names -->
     <string name="filter_original">Original</string>

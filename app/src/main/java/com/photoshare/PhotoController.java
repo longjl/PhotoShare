@@ -6,6 +6,7 @@ import com.photoshare.events.BucketEvent;
 import com.photoshare.events.PhotoSelectionAddedEvent;
 import com.photoshare.events.PhotoSelectionErrorEvent;
 import com.photoshare.events.PhotoSelectionRemovedEvent;
+import com.photoshare.events.RecordEvent;
 import com.photoshare.events.ShareEvent;
 import com.photoshare.model.Photo;
 import com.photoshare.dao.PhotoDatabaseHelper;
@@ -107,9 +108,20 @@ public class PhotoController {
         postEvent(new ShareEvent());
     }
 
+    /**
+     * 照片分类 事件
+     */
     public void bucketPhotoEvent() {
         postEvent(new BucketEvent());
     }
+
+    /**
+     * 记录事件
+     */
+    public void recordPhotoEvent() {
+        postEvent(new RecordEvent());
+    }
+
 
     public void postEvent(Object event) {
         EventBus.getDefault().post(event);
@@ -117,6 +129,8 @@ public class PhotoController {
 
     public synchronized boolean addSelection(final Photo selection) {
         boolean result = false;
+        if (selection == null) return result;
+
         if (!mSelectedPhotoList.contains(selection)) {
             if (mSelectedPhotoList != null && mSelectedPhotoList.size() > 8) {
                 postEvent(new PhotoSelectionErrorEvent());

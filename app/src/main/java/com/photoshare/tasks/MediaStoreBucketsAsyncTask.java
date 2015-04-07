@@ -39,6 +39,9 @@ public class MediaStoreBucketsAsyncTask extends AsyncTask<Void, Void, List<Media
         Context context = mContext.get();
 
         if (null != context) {
+            //删除photo
+            //MediaStoreCursorHelper.deletePhotosCursor(context, MediaStoreCursorHelper.MEDIA_STORE_CONTENT_URI, "photo");
+
             // Add 'All Photos' item
             result = new ArrayList<MediaStoreBucket>();
             result.add(MediaStoreBucket.getAllPhotosBucket(context));
@@ -51,7 +54,6 @@ public class MediaStoreBucketsAsyncTask extends AsyncTask<Void, Void, List<Media
                 cursor.close();
             }
         }
-
         return result;
     }
 

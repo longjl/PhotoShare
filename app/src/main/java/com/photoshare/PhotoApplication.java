@@ -10,6 +10,7 @@ import android.view.WindowManager;
 
 import com.photoshare.tasks.PhotoThreadFactory;
 
+import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -110,6 +111,20 @@ public class PhotoApplication extends Application {
             Log.e("uninstallSoftware", e.getMessage());
         }
         return false;
+    }
+
+
+    /**
+     * 删除本地缓冲内容
+     *
+     * @param directory
+     */
+    public void deleteFilesByDirectory(File directory) {
+        if (directory != null && directory.exists() && directory.isDirectory()) {
+            for (File item : directory.listFiles()) {
+                 item.delete();
+            }
+        }
     }
 
     @Override

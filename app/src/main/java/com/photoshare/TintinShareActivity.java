@@ -10,13 +10,11 @@ import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
-import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
 import com.photoshare.base.PhotoFragmentActivity;
-import com.photoshare.events.BucketEvent;
 import com.photoshare.events.PhotoSelectionAddedEvent;
 import com.photoshare.events.PhotoSelectionRemovedEvent;
 import com.photoshare.events.UploadsModifiedEvent;
@@ -52,9 +50,13 @@ public class TintinShareActivity extends PhotoFragmentActivity implements View.O
         super.onCreate(savedInstanceState);
         dm = getResources().getDisplayMetrics();        //获取屏幕分辨率
         setContentView(R.layout.activity_tintin_share);
+
+        mPhotoApplication = PhotoApplication.getApplication(this);
+        mPhotoController = mPhotoApplication.getPhotoUploadController();
+        setTitle();
+
         tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         pager = (ViewPager) findViewById(R.id.pager);
-
         tabs.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i2) {
@@ -75,12 +77,6 @@ public class TintinShareActivity extends PhotoFragmentActivity implements View.O
         mTabAdapter = new TabPagerAdapter(getSupportFragmentManager());
         tabsHandler.sendEmptyMessage(0);
         EventBus.getDefault().register(this);
-
-        mPhotoApplication = PhotoApplication.getApplication(this);
-        mPhotoController = mPhotoApplication.getPhotoUploadController();
-
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
     //tabs handler
@@ -117,7 +113,7 @@ public class TintinShareActivity extends PhotoFragmentActivity implements View.O
         // 设置选中Tab文字的颜色 (这是我自定义的一个方法)
         tabs.setSelectedTextColor(getResources().getColor(R.color.selectedtextcolor));
         // 取消点击Tab时的背景色
-        tabs.setTabBackground(R.drawable.tab_bg);
+        tabs.setTabBackground(0);
     }
 
     @Override
@@ -159,6 +155,7 @@ public class TintinShareActivity extends PhotoFragmentActivity implements View.O
      * @param event
      */
     public void onEvent(PhotoSelectionAddedEvent event) {
+        setTitle();
         refreshShareActionBarView();
     }
 
@@ -168,6 +165,7 @@ public class TintinShareActivity extends PhotoFragmentActivity implements View.O
      * @param event
      */
     public void onEvent(PhotoSelectionRemovedEvent event) {
+        setTitle();
         refreshShareActionBarView();
     }
 
@@ -197,15 +195,18 @@ public class TintinShareActivity extends PhotoFragmentActivity implements View.O
      */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem item = null;
+        //MenuItem item = null;
         switch (showTarget) {
-            case 0://图片
-                item = menu.findItem(R.id.action_bucket);
-                item.setVisible(true);
+            case 0://图片分类
+                MenuItem item_bucket = menu.findItem(R.id.action_bucket);
+                item_bucket.setVisible(true);
                 break;
             case 1:
-                item = menu.findItem(R.id.action_share);
-                item.setVisible(true);
+                MenuItem item_share = menu.findItem(R.id.action_share);
+                item_share.setVisible(true);
+
+                MenuItem item_share_record = menu.findItem(R.id.action_share_record);
+                item_share_record.setVisible(true);
                 break;
         }
         return super.onPrepareOptionsMenu(menu);
@@ -217,7 +218,11 @@ public class TintinShareActivity extends PhotoFragmentActivity implements View.O
             case R.id.action_bucket:
                 mPhotoController.bucketPhotoEvent();
                 break;
+            case R.id.action_share_record:
+                mPhotoController.recordPhotoEvent();
+                break;
             default:
+
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -244,9 +249,22 @@ public class TintinShareActivity extends PhotoFragmentActivity implements View.O
         refreshShareActionBarView();
     }
 
+    private CharSequence formatSelectedFragmentTitle() {
+        if (mPhotoController.getSelectedCount() == 0) {
+            return "";
+        } else {
+            return getString(R.string.app_title, mPhotoController.getSelectedCount());
+        }
+    }
+
+    private void setTitle() {
+        getSupportActionBar().setTitle(formatSelectedFragmentTitle());
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         refreshShareActionBarView();
     }
+
 }

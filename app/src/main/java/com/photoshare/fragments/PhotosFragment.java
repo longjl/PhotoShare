@@ -142,7 +142,6 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
                 if (null != mPhotoFile) {
                     if (resultCode == Activity.RESULT_OK) {
                         Utils.scanMediaJpegFile(getActivity(), mPhotoFile, this);
-                        loadBucketId(getSelectedBucketFromPrefs());
                     } else {
                         if (Flags.DEBUG) {
                             Log.d("UserPhotosFragment", "Deleting Photo File");
@@ -153,7 +152,6 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
                 }
                 return;
         }
-
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -186,10 +184,16 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
         EventBus.getDefault().register(this);
     }
 
+
+    /**
+     * 加载所有图片
+     *
+     * @param id
+     * @param bundle
+     * @return
+     */
     public Loader<Cursor> onCreateLoader(final int id, Bundle bundle) {
-
         CursorLoader cursorLoader = null;
-
         switch (id) {
             case LOADER_USER_PHOTOS_EXTERNAL:
                 String selection = null;
@@ -199,6 +203,7 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
                     selection = MediaStore.Images.Media.BUCKET_ID + " = ?";
                     selectionArgs = new String[]{bundle.getString(LOADER_PHOTOS_BUCKETS_PARAM)};
                 }
+                //保存选择的bucket_id
                 setSelectedBucketToPrefs(bundle.getString(LOADER_PHOTOS_BUCKETS_PARAM));
                 cursorLoader = new PhotoCursorLoader(getActivity(),
                         MediaStoreCursorHelper.MEDIA_STORE_CONTENT_URI,
@@ -206,7 +211,6 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
                         MediaStoreCursorHelper.PHOTOS_ORDER_BY, false);
                 break;
         }
-
         return cursorLoader;
     }
 
@@ -221,11 +225,17 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Load buckets
+        MediaStoreBucketsAsyncTask.execute(getActivity(), this);
+    }
 
     @Override
     public void onResume() {
         super.onResume();
-
+        //Toast.makeText(getActivity(), "onResume", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -251,6 +261,7 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
                                 Utils.drawViewOntoBitmap(view), 0, 0);
                 b = options.toBundle();
             }
+
             Intent intent = new Intent(getActivity(), PhotoViewerActivity.class);
             // Need take Camera icon into account so minus 1
             intent.putExtra(PhotoViewerActivity.EXTRA_POSITION, position - 1);
@@ -335,7 +346,7 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
      * @param event
      */
     public void onEvent(PhotoSelectionErrorEvent event) {
-        Toast.makeText(getActivity(), "你最多只能添加9张图片", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "你最多只能选择9张图片", Toast.LENGTH_SHORT).show();
         mPhotoAdapter.notifyDataSetChanged();
     }
 
@@ -348,29 +359,18 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
         super.onSaveInstanceState(outState);
     }
 
+    /**
+     * 拍照完成后执行
+     *
+     * @param path
+     * @param uri
+     */
     public void onScanCompleted(String path, Uri uri) {
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
-                MediaStoreBucket bucket = getSelectedBucket();
-                if (null != bucket) {
-                    loadBucketId(bucket.getId());
-                }
+                loadBucketId(getSelectedBucketFromPrefs());
             }
         });
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Load buckets
-        MediaStoreBucketsAsyncTask.execute(getActivity(), this);
-    }
-
-    private MediaStoreBucket getSelectedBucket() {
-        if (null != lv_bucket) {
-            return (MediaStoreBucket) lv_bucket.getSelectedItem();
-        }
-        return null;
     }
 
     private void loadBucketId(String id) {

@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,8 +21,10 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -30,17 +33,18 @@ import com.photoshare.PhotoApplication;
 import com.photoshare.PhotoController;
 import com.photoshare.R;
 import com.photoshare.activities.PhotoViewerActivity;
+import com.photoshare.adapters.RecordAdapter;
 import com.photoshare.adapters.SelectedPhotosBaseAdapter;
 import com.photoshare.adapters.ShareAdapter;
 import com.photoshare.dao.RecordDatabaseHelper;
 import com.photoshare.events.PhotoSelectionAddedEvent;
 import com.photoshare.events.PhotoSelectionRemovedEvent;
+import com.photoshare.events.RecordEvent;
 import com.photoshare.events.ShareEvent;
 import com.photoshare.model.History;
 import com.photoshare.model.Photo;
-import com.photoshare.dao.PhotoDatabaseHelper;
 import com.photoshare.model.Record;
-import com.photoshare.tasks.PhotoThreadRunnable;
+import com.photoshare.tasks.RecordAsyncTask;
 import com.photoshare.util.ShareUtils;
 import com.photoshare.util.Utils;
 
@@ -59,8 +63,10 @@ import de.greenrobot.event.EventBus;
  */
 public class SelectedPhotosFragment extends SherlockFragment
         implements AdapterView.OnItemClickListener,
-        SwipeDismissListViewTouchListener.OnDismissCallback, View.OnClickListener {
+        SwipeDismissListViewTouchListener.OnDismissCallback,
+        View.OnClickListener, RecordAsyncTask.RecordResultListener {
     private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private DisplayMetrics dm;                          //获取当前屏幕的密度
 
     private GridView mGridView;
     private EditText et_content;
@@ -72,7 +78,16 @@ public class SelectedPhotosFragment extends SherlockFragment
     private GridView gv_share;
     private ShareAdapter shareAdapter;
 
+    private PopupWindow recordPopupWindow;
+    private View recordPopupWindowView;
+    private ListView recordListView;
+    private Button btn_cancel;
+    private RecordAdapter recordAdapter;
+    private List<Record> records = new ArrayList<Record>();
+
     private View view;
+
+    private String acc_id = "1234567890";
 
     @Override
     public void onAttach(Activity activity) {
@@ -82,6 +97,7 @@ public class SelectedPhotosFragment extends SherlockFragment
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dm = getResources().getDisplayMetrics();        //获取屏幕分辨率
         EventBus.getDefault().register(this);
     }
 
@@ -106,7 +122,9 @@ public class SelectedPhotosFragment extends SherlockFragment
         mAdapter = new SelectedPhotosBaseAdapter(getActivity(), !swipeToDismiss);
         mGridView.setAdapter(mAdapter);
         mGridView.setEmptyView(view.findViewById(android.R.id.empty));
-        initPopupWindow();
+
+        initSharePopupWindow();
+        initRecordPopupWindow();
         return view;
     }
 
@@ -129,13 +147,17 @@ public class SelectedPhotosFragment extends SherlockFragment
             if (null != platform) {
                 uninstallSoftware(platform);
             }
+        } else if (parent.getId() == recordListView.getId()) {
+            dismissRecordPopupWindow();
+            Record record = recordAdapter.getItem(position);
+            et_content.setText(record.content);
         }
     }
 
     private void uninstallSoftware(String platform) {
         PhotoApplication app = PhotoApplication.getApplication(getActivity());
         if (mPhotoSelectionController.getSelectedCount() == 0) {
-            Toast.makeText(getActivity(), "不能没有图片", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "没有照片可分享", Toast.LENGTH_SHORT).show();
             return;
         }
         if (platform.equals("SinaWeibo")) {
@@ -181,7 +203,7 @@ public class SelectedPhotosFragment extends SherlockFragment
         @Override
         public void handleMessage(Message msg) {
             Record record = new Record();
-            record.acc_id = "1234567890";
+            record.acc_id = acc_id;
             record.content = getContentForText();
             record.date = format.format(new Date());
 
@@ -205,7 +227,7 @@ public class SelectedPhotosFragment extends SherlockFragment
                 histories.add(history);
             }
             //保存记录
-            //RecordDatabaseHelper.saveRecordToDatabase(getActivity(), record, histories);
+            RecordDatabaseHelper.saveRecordToDatabase(getActivity(), record, histories);
         }
     };
 
@@ -236,10 +258,12 @@ public class SelectedPhotosFragment extends SherlockFragment
         mAdapter.notifyDataSetChanged();
     }
 
+    /* **************************************分享PopupWindow****************************************/
+
     /**
-     * 初始化
+     * 初始化分享PopupWindow
      */
-    private void initPopupWindow() {
+    private void initSharePopupWindow() {
         LayoutInflater inflater = LayoutInflater.from(getActivity());
         popupWindowView = inflater.inflate(R.layout.fragment_popupwindow_share, null);
         popupWindow = new PopupWindow(popupWindowView, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, true);
@@ -255,24 +279,74 @@ public class SelectedPhotosFragment extends SherlockFragment
     }
 
     /**
-     * 分享弹出框
+     * 弹出分享PopupWindow
      */
-    private void showPopupWindow() {
+    private void showSharePopupWindow() {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         popupWindow.showAtLocation(gv_share, Gravity.BOTTOM, 0, 0);
     }
 
 
+ /* **************************************分享PopupWindow****************************************/
+
+    /**
+     * 初始化记录PopupWindow
+     */
+    private void initRecordPopupWindow() {
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        recordPopupWindowView = inflater.inflate(R.layout.fragment_popupwindow_record, null);
+        recordPopupWindow = new PopupWindow(recordPopupWindowView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT, true);
+        recordPopupWindow.setBackgroundDrawable(new BitmapDrawable(getResources(), (Bitmap) null));
+        //设置PopupWindow的弹出和消失效果
+        recordPopupWindow.setAnimationStyle(R.style.popupAnimation);
+
+        btn_cancel = (Button) recordPopupWindowView.findViewById(R.id.btn_cancel);
+        btn_cancel.setOnClickListener(this);
+
+        recordListView = (ListView) recordPopupWindowView.findViewById(R.id.lv_record);
+        recordListView.setOnItemClickListener(this);
+        if (recordAdapter == null) {
+            recordAdapter = new RecordAdapter(getActivity(), records);
+        }
+        recordListView.setAdapter(recordAdapter);
+    }
+
+    /**
+     * 弹出记录PopupWindow
+     */
+    private void showRecordPopupWindow() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        recordPopupWindow.showAtLocation(recordListView, Gravity.BOTTOM, 0, 0);
+    }
+
+    /**
+     * 关闭PopupWindow
+     */
+    private void dismissRecordPopupWindow() {
+        if (recordPopupWindow != null) {
+            recordPopupWindow.dismiss();
+        }
+    }
+
     @Override
     public void onClick(View v) {
+        if (v.getId() == btn_cancel.getId()) {
+            dismissRecordPopupWindow();
+        }
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        RecordAsyncTask.execute(getActivity(), this, acc_id);
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -294,13 +368,34 @@ public class SelectedPhotosFragment extends SherlockFragment
         mAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * 分享事件
+     *
+     * @param event
+     */
     public void onEvent(ShareEvent event) {
-        showPopupWindow();
+        showSharePopupWindow();
+    }
+
+    /**
+     * 记录事件
+     *
+     * @param event
+     */
+    public void onEvent(RecordEvent event) {
+        showRecordPopupWindow();
+        recordAdapter.notifyDataSetChanged();
     }
 
     private ProgressDialog dialog;
 
     private void showProgressDialog() {
         dialog = ProgressDialog.show(getActivity(), "", "数据传输中. 请稍等...", true, false);
+    }
+
+    @Override
+    public void onRecordsLoaded(List<Record> records) {
+        this.records.clear();
+        this.records.addAll(records);
     }
 }
