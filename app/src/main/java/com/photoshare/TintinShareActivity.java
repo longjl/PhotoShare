@@ -107,7 +107,7 @@ public class TintinShareActivity extends PhotoFragmentActivity implements View.O
         // 设置Tab Indicator的高度
         tabs.setIndicatorHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, dm));
         // 设置Tab标题文字的大小
-        tabs.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 18, dm));
+        tabs.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16, dm));
         // 设置Tab Indicator的颜色
         tabs.setIndicatorColor(getResources().getColor(R.color.indicatorcolor));
         // 设置选中Tab文字的颜色 (这是我自定义的一个方法)
