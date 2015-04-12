@@ -102,7 +102,7 @@ public class TintinShareActivity extends PhotoFragmentActivity implements View.O
     private void setTabsValue() {
         // 设置Tab是自动填充满屏幕的
         tabs.setShouldExpand(true);
-        tabs.setUnderlineColorResource(R.color.blue_dark);
+        tabs.setUnderlineColorResource(R.color.pstsUnderlineColor);
 
         // 设置Tab的分割线是透明的
         //tabs.setDividerColor(getResources().getColor(R.color.blue_v_dark));
@@ -110,13 +110,13 @@ public class TintinShareActivity extends PhotoFragmentActivity implements View.O
         // 设置Tab底部线的高度
         tabs.setUnderlineHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, dm));
         // 设置Tab Indicator的高度
-        tabs.setIndicatorHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, dm));
+        tabs.setIndicatorHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6, dm));
         // 设置Tab标题文字的大小
         tabs.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 18, dm));
         // 设置Tab Indicator的颜色
-        tabs.setIndicatorColor(getResources().getColor(R.color.translucent_lght_grey));
+        tabs.setIndicatorColor(getResources().getColor(R.color.blue_med));
         // 设置选中Tab文字的颜色 (这是我自定义的一个方法)
-        tabs.setSelectedTextColor(getResources().getColor(R.color.white));
+        tabs.setSelectedTextColor(getResources().getColor(R.color.blue_med));
         // 取消点击Tab时的背景色
         tabs.setTabBackground(0);
     }

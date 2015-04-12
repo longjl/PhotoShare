@@ -10,6 +10,14 @@
     <string name="action_share_record">分享记录</string>
     <string name="text_image_count">(%1$d)</string>
 
+
+    <string name="delete_success">删除成功</string>
+    <string name="delete_msg">您确定要删除这条数据吗?</string>
+    <string name="sure">确认</string>
+    <string name="cancel">取消</string>
+    <string name="no_photo">没有照片可分享</string>
+    <string name="choose_limit_nine">你最多只能选择9张图片</string>
+
     <!-- Filter names -->
     <string name="filter_original">Original</string>
     <string name="filter_instafix">Instafix</string>

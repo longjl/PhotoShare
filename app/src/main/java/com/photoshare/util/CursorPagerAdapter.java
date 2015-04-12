@@ -29,50 +29,50 @@ public abstract class CursorPagerAdapter extends PagerAdapter {
 
     /**
      * This field should be made private, so it is hidden from the SDK. {@hide
-     *
-     *
+     * <p/>
+     * <p/>
      * }
      */
     protected boolean mDataValid;
     /**
      * This field should be made private, so it is hidden from the SDK. {@hide
-     *
-     *
+     * <p/>
+     * <p/>
      * }
      */
     protected boolean mAutoRequery;
     /**
      * This field should be made private, so it is hidden from the SDK. {@hide
-     *
-     *
+     * <p/>
+     * <p/>
      * }
      */
     protected Cursor mCursor;
     /**
      * This field should be made private, so it is hidden from the SDK. {@hide
-     *
-     *
+     * <p/>
+     * <p/>
      * }
      */
     protected Context mContext;
     /**
      * This field should be made private, so it is hidden from the SDK. {@hide
-     *
-     *
+     * <p/>
+     * <p/>
      * }
      */
     protected int mRowIDColumn;
     /**
      * This field should be made private, so it is hidden from the SDK. {@hide
-     *
-     *
+     * <p/>
+     * <p/>
      * }
      */
     protected ChangeObserver mChangeObserver;
     /**
      * This field should be made private, so it is hidden from the SDK. {@hide
-     *
-     *
+     * <p/>
+     * <p/>
      * }
      */
     protected DataSetObserver mDataSetObserver;
@@ -82,9 +82,9 @@ public abstract class CursorPagerAdapter extends PagerAdapter {
      * delivered. Implies {@link #FLAG_REGISTER_CONTENT_OBSERVER}.
      *
      * @deprecated This option is discouraged, as it results in Cursor queries being performed on the
-     *             application's UI thread and thus can cause poor responsiveness or even Application
-     *             Not Responding errors. As an alternative, use {@link android.app.LoaderManager} with
-     *             a {@link android.content.CursorLoader}.
+     * application's UI thread and thus can cause poor responsiveness or even Application
+     * Not Responding errors. As an alternative, use {@link android.app.LoaderManager} with
+     * a {@link android.content.CursorLoader}.
      */
     @Deprecated
     public static final int FLAG_AUTO_REQUERY = 0x01;
@@ -104,9 +104,9 @@ public abstract class CursorPagerAdapter extends PagerAdapter {
      * @param c       The cursor from which to get the data.
      * @param context The context
      * @deprecated This option is discouraged, as it results in Cursor queries being performed on the
-     *             application's UI thread and thus can cause poor responsiveness or even Application
-     *             Not Responding errors. As an alternative, use {@link android.app.LoaderManager} with
-     *             a {@link android.content.CursorLoader}.
+     * application's UI thread and thus can cause poor responsiveness or even Application
+     * Not Responding errors. As an alternative, use {@link android.app.LoaderManager} with
+     * a {@link android.content.CursorLoader}.
      */
     @Deprecated
     public CursorPagerAdapter(Context context, Cursor c) {
@@ -262,7 +262,7 @@ public abstract class CursorPagerAdapter extends PagerAdapter {
      *
      * @param newCursor The new cursor to be used.
      * @return Returns the previously set Cursor, or null if there was not one. If the given new Cursor
-     *         is the same instance is the previously set Cursor, null is also returned.
+     * is the same instance is the previously set Cursor, null is also returned.
      */
     public Cursor swapCursor(Cursor newCursor) {
         if (newCursor == mCursor) {

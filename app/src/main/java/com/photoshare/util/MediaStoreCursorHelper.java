@@ -94,7 +94,7 @@ public class MediaStoreCursorHelper {
         final int nameColumn = cursor.getColumnIndex(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME);//名字
         final int dataColumn = cursor.getColumnIndex(MediaStore.Images.Media.DATA); //获取图片索引
 
-        Log.e("================count", cursor.getCount()+"");
+        Log.e("================count", cursor.getCount() + "");
         if (cursor.moveToFirst()) {
             do {
                 try {

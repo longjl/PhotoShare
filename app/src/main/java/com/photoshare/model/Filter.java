@@ -5,7 +5,7 @@ import com.photoshare.R;
 /**
  * Created by longjianlin on 15/3/19.
  */
-public enum  Filter {
+public enum Filter {
 
     // DO NOT CHANGE ORDER DUE TO INSTANT UPLOAD FILTER PREF!
     ORIGINAL(R.string.filter_original),

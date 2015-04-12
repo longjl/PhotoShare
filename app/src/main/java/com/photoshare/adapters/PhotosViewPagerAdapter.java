@@ -70,7 +70,6 @@ public class PhotosViewPagerAdapter extends CursorPagerAdapter {
         }
 
 
-
         return view;
     }
 

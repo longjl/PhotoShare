@@ -15,4 +15,13 @@ public class Constants {
     public static final String RECORD_ID = "record_id";
     public static final String EXTRA_MODE = "extra_mode";
     public static final String EXTRA_BUCKET_ID = "extra_bucket_id";
+
+
+    public static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
+    public static final String SINA_WEIBO = "SinaWeibo";
+    public static final String SINA_WEIBO_APP = "com.sina.weibo";
+
+    public static final String WEB_CHAT_MOMENTS = "WebChatMoments";
+    public static final String WEB_CHAT_MOMENTS_APP = "com.tencent.mm";
 }

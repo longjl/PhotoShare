@@ -1,4 +1,5 @@
 package com.photoshare.util;
+
 import android.content.Context;
 import android.net.Uri;
 import android.support.v4.content.CursorLoader;

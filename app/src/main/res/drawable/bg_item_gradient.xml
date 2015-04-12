@@ -19,7 +19,7 @@
 
     <gradient
         android:angle="270"
-        android:endColor="@color/item_bg_mid"
-        android:startColor="@color/item_bg_light" />
+        android:endColor="@color/chrome_custom_background_alpha"
+        android:startColor="@color/chrome_custom_background_alpha" />
 
 </shape>

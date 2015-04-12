@@ -42,9 +42,9 @@ public abstract class ResourceCursorPagerAdapter extends CursorPagerAdapter {
      *                Unless you override them later, this will define both the item views and the drop
      *                down views.
      * @deprecated This option is discouraged, as it results in Cursor queries being performed on the
-     *             application's UI thread and thus can cause poor responsiveness or even Application
-     *             Not Responding errors. As an alternative, use {@link android.app.LoaderManager} with
-     *             a {@link android.content.CursorLoader}.
+     * application's UI thread and thus can cause poor responsiveness or even Application
+     * Not Responding errors. As an alternative, use {@link android.app.LoaderManager} with
+     * a {@link android.content.CursorLoader}.
      */
     @Deprecated
     public ResourceCursorPagerAdapter(Context context, int layout, Cursor c) {
@@ -94,7 +94,7 @@ public abstract class ResourceCursorPagerAdapter extends CursorPagerAdapter {
      * Inflates view(s) from the specified XML file.
      *
      * @see android.widget.CursorAdapter#newView(android.content.Context, android.database.Cursor,
-     *      android.view.ViewGroup)
+     * android.view.ViewGroup)
      */
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {

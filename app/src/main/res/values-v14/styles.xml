@@ -12,8 +12,8 @@
         <item name="android:windowContentOverlay">@null</item>
         <!--<item name="android:homeAsUpIndicator">@drawable/ic_drawer</item>-->
 
-        <item name="android:windowBackground">@color/window_back_ground_color</item>
-        <item name="android:colorBackground">@color/window_back_ground_color</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:colorBackground">@android:color/white</item>
     </style>
 
     <style name="TintinShareActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">

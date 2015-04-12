@@ -8,6 +8,7 @@
     android:background="@color/white"
     ptr:ptrAnimationStyle="flip"
     ptr:ptrMode="both">
+
     <com.photoshare.views.PhotoListView
         android:id="@+id/photo_list_view"
         android:layout_width="match_parent"

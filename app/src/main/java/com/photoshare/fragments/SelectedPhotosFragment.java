@@ -63,7 +63,7 @@ public class SelectedPhotosFragment extends SherlockFragment
         implements AdapterView.OnItemClickListener,
         SwipeDismissListViewTouchListener.OnDismissCallback,
         View.OnClickListener, RecordsAsyncTask.RecordResultListener {
-    private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static SimpleDateFormat format = new SimpleDateFormat(Constants.DATE_FORMAT);
     private DisplayMetrics dm;                          //获取当前屏幕的密度
 
     private GridView mGridView;
@@ -153,11 +153,11 @@ public class SelectedPhotosFragment extends SherlockFragment
     private void uninstallSoftware(String platform) {
         PhotoApplication app = PhotoApplication.getApplication(getActivity());
         if (mPhotoSelectionController.getSelectedCount() == 0) {
-            Toast.makeText(getActivity(), "没有照片可分享", Toast.LENGTH_SHORT).show();
+            showToast(R.string.no_photo);
             return;
         }
-        if (platform.equals("SinaWeibo")) {
-            if (app.uninstallSoftware(getActivity(), "com.sina.weibo")) {
+        if (platform.equals(Constants.SINA_WEIBO)) {
+            if (app.uninstallSoftware(getActivity(), Constants.SINA_WEIBO_APP)) {
                 handler.sendEmptyMessage(0);
 
                 Message message = new Message();
@@ -167,8 +167,8 @@ public class SelectedPhotosFragment extends SherlockFragment
             } else {
                 Toast.makeText(getActivity(), R.string.sina_weibo_exception, Toast.LENGTH_SHORT).show();
             }
-        } else if (platform.equals("WebChatMoments")) {
-            if (app.uninstallSoftware(getActivity(), "com.tencent.mm")) {
+        } else if (platform.equals(Constants.WEB_CHAT_MOMENTS)) {
+            if (app.uninstallSoftware(getActivity(), Constants.WEB_CHAT_MOMENTS_APP)) {
                 handler.sendEmptyMessage(0);
 
                 Message message = new Message();
@@ -413,5 +413,14 @@ public class SelectedPhotosFragment extends SherlockFragment
     public void onRecordsLoaded(List<Record> records) {
         this.records.clear();
         this.records.addAll(records);
+    }
+
+    /**
+     * 显示Toast
+     *
+     * @param resId
+     */
+    private void showToast(int resId) {
+        Toast.makeText(getActivity(), resId, Toast.LENGTH_SHORT).show();
     }
 }

@@ -1,17 +1,17 @@
 <resources>
-    <dimen name="gridview_spacing">1dp</dimen>
+    <dimen name="gridview_spacing">3dp</dimen>
     <dimen name="selected_gridview_spacing">5dp</dimen>
 
     <dimen name="gridview_item_dimension_user_small">105dp</dimen>
     <dimen name="gridview_item_dimension_user_large">170dp</dimen>
     <dimen name="gridview_item_dimension_user">@dimen/gridview_item_dimension_user_small</dimen>
 
-    <dimen name="gridview_item_dimension_user_height">@dimen/gridview_item_dimension_user_small_height</dimen>
+    <dimen name="gridview_item_dimension_user_height">
+        @dimen/gridview_item_dimension_user_small_height
+    </dimen>
     <dimen name="gridview_item_dimension_user_small_height">120dp</dimen>
-
     <dimen name="gridview_item_dimension_user_selected">75dp</dimen>
     <dimen name="spacing">5dp</dimen>
-
     <dimen name="crop_hysteresis">16dp</dimen>
 
     <dimen name="gridview_item_margin_small">3dp</dimen>

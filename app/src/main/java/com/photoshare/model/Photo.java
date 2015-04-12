@@ -343,7 +343,7 @@ public class Photo {
         }
     }
 
-    public Bitmap getThumbnailImageFromMediaStore(Context context,Uri mFullUri) {
+    public Bitmap getThumbnailImageFromMediaStore(Context context, Uri mFullUri) {
         Resources res = context.getResources();
 
         final int kind = res.getBoolean(R.bool.load_mini_thumbnails) ? MediaStore.Images.Thumbnails.MINI_KIND

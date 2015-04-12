@@ -345,7 +345,7 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
      * @param event
      */
     public void onEvent(PhotoSelectionErrorEvent event) {
-        Toast.makeText(getActivity(), "你最多只能选择9张图片", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), R.string.choose_limit_nine, Toast.LENGTH_SHORT).show();
         mPhotoAdapter.notifyDataSetChanged();
     }
 

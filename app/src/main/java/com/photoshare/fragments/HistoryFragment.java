@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
+import com.photoshare.Constants;
 import com.photoshare.PhotoApplication;
 import com.photoshare.R;
 import com.photoshare.adapters.HistoryAdapter;
@@ -62,7 +63,7 @@ public class HistoryFragment extends SherlockFragment implements HistoryAsyncTas
 
     private static Context mContext;
     private Map<Integer, Record> map = new HashMap<Integer, Record>();
-    private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private SimpleDateFormat format = new SimpleDateFormat(Constants.DATE_FORMAT);
     private boolean flag = true;//表示第一次刷新
 
     private static PhotoApplication app;
@@ -295,7 +296,7 @@ public class HistoryFragment extends SherlockFragment implements HistoryAsyncTas
     private void uninstallSoftware(String platform, Record record) {
         PhotoApplication app = PhotoApplication.getApplication(getActivity());
         if (record.histories.size() == 0) {
-            Toast.makeText(mContext, "没有照片可分享", Toast.LENGTH_SHORT).show();
+            showToast(R.string.no_photo);
             return;
         }
         List<Photo> photos = new ArrayList<Photo>();
@@ -316,14 +317,14 @@ public class HistoryFragment extends SherlockFragment implements HistoryAsyncTas
             photo.mFullUriString = history.mFullUriString;
             photos.add(photo);
         }
-        if (platform.equals("SinaWeibo")) {
-            if (app.uninstallSoftware(mContext, "com.sina.weibo")) {
+        if (platform.equals(Constants.SINA_WEIBO)) {
+            if (app.uninstallSoftware(mContext, Constants.SINA_WEIBO_APP)) {
                 ShareUtils.share(mContext, platform, photos, record.content);
             } else {
                 Toast.makeText(mContext, R.string.sina_weibo_exception, Toast.LENGTH_SHORT).show();
             }
-        } else if (platform.equals("WebChatMoments")) {
-            if (app.uninstallSoftware(mContext, "com.tencent.mm")) {
+        } else if (platform.equals(Constants.WEB_CHAT_MOMENTS)) {
+            if (app.uninstallSoftware(mContext, Constants.WEB_CHAT_MOMENTS_APP)) {
                 ShareUtils.share(mContext, platform, photos, record.content);
             } else {
                 Toast.makeText(mContext, R.string.WebChat_Moments_exception, Toast.LENGTH_SHORT).show();
@@ -337,7 +338,6 @@ public class HistoryFragment extends SherlockFragment implements HistoryAsyncTas
         msg.what = 200;
         msg.arg1 = adapter.getItem(position)._id;
         msg.arg2 = position;
-        //Toast.makeText(mContext, "没有照片可分享" + adapter.getItem(position)._id + "--" + msg.arg1, Toast.LENGTH_SHORT).show();
         deleteHandler.sendMessage(msg);
         return true;
     }
@@ -349,14 +349,14 @@ public class HistoryFragment extends SherlockFragment implements HistoryAsyncTas
             final int position = msg.arg2;
             if (msg.what == 200) {
                 new AlertDialog.Builder(mContext)
-                        .setMessage("您确定要删除这条数据吗?")
-                        .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        .setMessage(R.string.delete_msg)
+                        .setPositiveButton(R.string.sure, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 deleteRecord(record_id, position);
                             }
                         })
-                        .setNegativeButton("取消", null)
+                        .setNegativeButton(R.string.cancel, null)
                         .create().show();
             }
         }
@@ -370,9 +370,18 @@ public class HistoryFragment extends SherlockFragment implements HistoryAsyncTas
      */
     private void deleteRecord(final int record_id, final int position) {
         RecordDatabaseHelper.deleteRecord(mContext, record_id);
-        Toast.makeText(mContext, "删除成功", Toast.LENGTH_SHORT).show();
+        showToast(R.string.delete_success);
         records.remove(position);
         adapter.notifyDataSetChanged();
     }
 
+
+    /**
+     * 显示Toast
+     *
+     * @param resId
+     */
+    private void showToast(int resId) {
+        Toast.makeText(mContext, resId, Toast.LENGTH_SHORT).show();
+    }
 }
