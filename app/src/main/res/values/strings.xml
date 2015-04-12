@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">图片分享</string>
-    <string name="app_title">%1$d</string>
-
+    <string name="app_name"></string>
+    <string name="app_name_">PhotoShare</string>
+    <string name="app_title">(%1$d)</string>
 
     <string name="action_share">分享</string>
     <string name="action_bucket">图片分类</string>
     <string name="action_share_record">分享记录</string>
+    <string name="text_image_count">(%1$d)</string>
 
     <!-- Filter names -->
     <string name="filter_original">Original</string>
@@ -42,6 +43,5 @@
 
     <string name="sina_weibo_exception">需要安装新浪微博客户端</string>
     <string name="WebChat_Moments_exception">需要安装微信户端</string>
-
     <string name="cancel_prompt">取 消</string>
 </resources>

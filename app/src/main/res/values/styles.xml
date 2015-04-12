@@ -10,6 +10,8 @@
     <style name="PhotosGridView">
         <item name="android:horizontalSpacing">@dimen/gridview_spacing</item>
         <!--<item name="android:listSelector">@drawable/selectable_background_photup</item>-->
+        <!--<item name="android:paddingLeft">@dimen/gridview_spacing</item>-->
+        <!--<item name="android:paddingRight">@dimen/gridview_spacing</item>-->
         <item name="android:numColumns">auto_fit</item>
         <item name="android:stretchMode">columnWidth</item>
         <item name="android:verticalSpacing">@dimen/gridview_spacing</item>
@@ -38,6 +40,7 @@
     <style name="Theme.Fullscreen" parent="TintinShareTheme">
         <item name="android:windowFullscreen">true</item>
     </style>
+
     <style name="Theme.FullscreenOverlay" parent="Theme.Sherlock">
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowActionBarOverlay">true</item>

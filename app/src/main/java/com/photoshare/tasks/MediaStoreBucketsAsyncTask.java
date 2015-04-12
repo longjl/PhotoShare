@@ -3,6 +3,7 @@ package com.photoshare.tasks;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.photoshare.model.MediaStoreBucket;
 import com.photoshare.util.MediaStoreCursorHelper;
@@ -40,12 +41,11 @@ public class MediaStoreBucketsAsyncTask extends AsyncTask<Void, Void, List<Media
 
         if (null != context) {
             //删除photo
-            //MediaStoreCursorHelper.deletePhotosCursor(context, MediaStoreCursorHelper.MEDIA_STORE_CONTENT_URI, "photo");
+            MediaStoreCursorHelper.deletePhotosCursor(context, MediaStoreCursorHelper.MEDIA_STORE_CONTENT_URI, "photo");
 
             // Add 'All Photos' item
             result = new ArrayList<MediaStoreBucket>();
             result.add(MediaStoreBucket.getAllPhotosBucket(context));
-
             Cursor cursor = MediaStoreCursorHelper.openPhotosCursor(context,
                     MediaStoreCursorHelper.MEDIA_STORE_CONTENT_URI);
 

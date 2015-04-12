@@ -3,6 +3,9 @@ package com.photoshare.model;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 记录信息表
  * Created by longjianlin on 15/4/5.
@@ -20,4 +23,6 @@ public class Record {
 
     @DatabaseField(columnName = "date")
     public String date;//分享日期
+
+    public List<History> histories = new ArrayList<History>();//历史记录
 }

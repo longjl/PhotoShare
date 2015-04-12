@@ -102,6 +102,50 @@ public class PhotoTagItemLayout extends FrameLayout
         addPhotoTags();
     }
 
+    /**
+     * longjl
+     *
+     * @param context
+     * @param upload
+     */
+    public PhotoTagItemLayout(Context context, PhotoController controller, Photo upload, boolean isShowButton) {
+        super(context);
+
+        mController = controller;
+        mLayoutInflater = LayoutInflater.from(context);
+
+        mImageView = new MultiTouchImageView(context);
+        mImageView.setOnMatrixChangeListener(this);
+        mImageView.setPhotoTapListener(this);
+        addView(mImageView, LayoutParams.MATCH_PARENT,
+                LayoutParams.MATCH_PARENT);
+
+        mTagLayout = new AbsoluteLayout(context);
+        addView(mTagLayout, LayoutParams.MATCH_PARENT,
+                LayoutParams.MATCH_PARENT);
+
+        mPhotoTagInAnimation = AnimationUtils.loadAnimation(context, R.anim.tag_fade_in);
+        mPhotoTagOutAnimation = AnimationUtils.loadAnimation(context, R.anim.tag_fade_out);
+
+        LayoutInflater inflater = LayoutInflater.from(context);
+
+
+        mButton = (CheckableImageView) inflater
+                .inflate(R.layout.layout_check_button_lrg, this, false);
+        mButton.setOnClickListener(this);
+
+        addView(mButton);
+
+        mFaceDetectIndicator = inflater.inflate(R.layout.layout_face_detect, this, false);
+        addView(mFaceDetectIndicator);
+
+        mUpload = upload;
+        if (isShowButton) {
+            mButton.setVisibility(GONE);
+        }
+        addPhotoTags();
+    }
+
     public MultiTouchImageView getImageView() {
         return mImageView;
     }

@@ -20,30 +20,28 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
-import java.util.List;
-
 import com.photoshare.PhotoApplication;
 import com.photoshare.PhotoController;
-import com.photoshare.listeners.OnSingleTapListener;
 import com.photoshare.model.Photo;
 import com.photoshare.views.MultiTouchImageView;
 import com.photoshare.views.PhotoTagItemLayout;
 
-public class SelectedPhotosViewPagerAdapter extends PagerAdapter {
+import java.util.List;
+
+/**
+ * 浏览图片
+ */
+public class PhotoViewPagerAdapter extends PagerAdapter {
 
     private final Context mContext;
-    private final PhotoController mController;
-    private final OnSingleTapListener mTapListener;
-
     private List<Photo> mItems;
+    private final PhotoController mController;
 
-    public SelectedPhotosViewPagerAdapter(Context context, OnSingleTapListener tapListener) {
+    public PhotoViewPagerAdapter(Context context, List<Photo> photos) {
         mContext = context;
-        mTapListener = tapListener;
-
+        mItems = photos;
         PhotoApplication app = PhotoApplication.getApplication(context);
         mController = app.getPhotoUploadController();
-        refreshData();
     }
 
     @Override
@@ -75,18 +73,15 @@ public class SelectedPhotosViewPagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(View container, int position) {
         Photo upload = mItems.get(position);
-
-        PhotoTagItemLayout view = new PhotoTagItemLayout(mContext, mController, upload);
+        PhotoTagItemLayout view = new PhotoTagItemLayout(mContext, mController, upload, true);
         view.setPosition(position);
 
         upload.setFaceDetectionListener(view);
 
         MultiTouchImageView imageView = view.getImageView();
         imageView.requestFullSize(upload, true, null);
-        imageView.setSingleTapListener(mTapListener);
 
         ((ViewPager) container).addView(view);
-
         return view;
     }
 
@@ -97,16 +92,11 @@ public class SelectedPhotosViewPagerAdapter extends PagerAdapter {
 
     @Override
     public void notifyDataSetChanged() {
-        refreshData();
         super.notifyDataSetChanged();
     }
 
     protected Context getContext() {
         return mContext;
-    }
-
-    private void refreshData() {
-        mItems = mController.getSelected();
     }
 
 }

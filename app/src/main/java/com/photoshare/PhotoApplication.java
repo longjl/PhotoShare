@@ -6,8 +6,11 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.util.Log;
 import android.view.Display;
+import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 
+import com.photoshare.model.Account;
 import com.photoshare.tasks.PhotoThreadFactory;
 
 import java.io.File;
@@ -25,18 +28,19 @@ public class PhotoApplication extends Application {
     private ExecutorService mMultiThreadExecutor, mSingleThreadExecutor, mDatabaseThreadExecutor;
     private BitmapLruCache mImageCache;
     private PhotoController mPhotoController;
+    public Account account;
 
     @Override
     public void onCreate() {
         super.onCreate();
-
-        if (Flags.ENABLE_BUG_TRACKING) {
-            //Crittercism.init(this, Constants.CRITTERCISM_API_KEY);
-        }
-
-        //checkInstantUploadReceiverState();
-
+        initAccount();
         mPhotoController = new PhotoController(this);
+    }
+
+    private void initAccount() {
+        account = new Account();
+        account.acc_id = "1234567890";
+        account.nickname = "longjl";
     }
 
     public static PhotoApplication getApplication(Context context) {
@@ -122,8 +126,21 @@ public class PhotoApplication extends Application {
     public void deleteFilesByDirectory(File directory) {
         if (directory != null && directory.exists() && directory.isDirectory()) {
             for (File item : directory.listFiles()) {
-                 item.delete();
+                item.delete();
             }
+        }
+    }
+
+    /**
+     * 隐藏软键盘
+     *
+     * @param context
+     * @param view
+     */
+    public void hideSoftInputFormWindow(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm.isActive()) {//处于打开状态
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 

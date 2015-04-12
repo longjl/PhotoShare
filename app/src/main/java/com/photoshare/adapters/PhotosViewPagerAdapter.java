@@ -69,6 +69,8 @@ public class PhotosViewPagerAdapter extends CursorPagerAdapter {
             imageView.setSingleTapListener(mTapListener);
         }
 
+
+
         return view;
     }
 

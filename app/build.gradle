@@ -25,6 +25,7 @@ dependencies {
 
     compile(
             project(':deps:actionbarsherlock'),
-            project(':deps:PhotoProcessing')
+            project(':deps:PhotoProcessing'),
+            project(':deps:PullToRefreshLibrary')
     )
 }

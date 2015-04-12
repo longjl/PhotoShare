@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import com.actionbarsherlock.view.Menu;
@@ -19,6 +20,7 @@ import com.photoshare.events.PhotoSelectionAddedEvent;
 import com.photoshare.events.PhotoSelectionRemovedEvent;
 import com.photoshare.events.UploadsModifiedEvent;
 import com.photoshare.fragments.CircleFragment;
+import com.photoshare.fragments.HistoryFragment;
 import com.photoshare.fragments.PhotosFragment;
 import com.photoshare.fragments.SelectedPhotosFragment;
 import com.photoshare.views.PagerSlidingTabStrip;
@@ -34,29 +36,31 @@ public class TintinShareActivity extends PhotoFragmentActivity implements View.O
 
     private DisplayMetrics dm;                          //获取当前屏幕的密度
     private TabPagerAdapter mTabAdapter;                //Pager 数据适配器
-    private PhotoApplication mPhotoApplication;
+    private PhotoApplication app;
     private PhotoController mPhotoController;
-    private String[] mTitles = {"图片", "分享", "圈子"};
+    private String[] mTitles = {"照 片", "分 享", "往 事", "圈 子"};
     private Fragment[] fragments = new Fragment[]{
             new PhotosFragment(),
             new SelectedPhotosFragment(),
+            HistoryFragment.newInstance(this),
             new CircleFragment()
     };
-
+    private View view;
     private int showTarget = 0;//是否显示分享Menu
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dm = getResources().getDisplayMetrics();        //获取屏幕分辨率
-        setContentView(R.layout.activity_tintin_share);
+        view = LayoutInflater.from(this).inflate(R.layout.activity_tintin_share, null);
+        setContentView(view);
 
-        mPhotoApplication = PhotoApplication.getApplication(this);
-        mPhotoController = mPhotoApplication.getPhotoUploadController();
+        app = PhotoApplication.getApplication(this);
+        mPhotoController = app.getPhotoUploadController();
         setTitle();
 
-        tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-        pager = (ViewPager) findViewById(R.id.pager);
+        tabs = (PagerSlidingTabStrip) view.findViewById(R.id.tabs);
+        pager = (ViewPager) view.findViewById(R.id.pager);
         tabs.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int i, float v, int i2) {
@@ -67,6 +71,7 @@ public class TintinShareActivity extends PhotoFragmentActivity implements View.O
             public void onPageSelected(int i) {
                 showTarget = i;
                 getWindow().invalidatePanelMenu(Window.FEATURE_OPTIONS_PANEL);
+                app.hideSoftInputFormWindow(TintinShareActivity.this, view);
             }
 
             @Override
@@ -97,21 +102,21 @@ public class TintinShareActivity extends PhotoFragmentActivity implements View.O
     private void setTabsValue() {
         // 设置Tab是自动填充满屏幕的
         tabs.setShouldExpand(true);
-        tabs.setUnderlineColorResource(R.color.pstsUnderlineColor);
+        tabs.setUnderlineColorResource(R.color.blue_dark);
 
         // 设置Tab的分割线是透明的
-        //tabs.setDividerColor(getResources().getColor(R.color.translucent_lght_grey));
+        //tabs.setDividerColor(getResources().getColor(R.color.blue_v_dark));
         tabs.setDividerColor(getResources().getColor(android.R.color.transparent));
         // 设置Tab底部线的高度
         tabs.setUnderlineHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, dm));
         // 设置Tab Indicator的高度
         tabs.setIndicatorHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, dm));
         // 设置Tab标题文字的大小
-        tabs.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16, dm));
+        tabs.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 18, dm));
         // 设置Tab Indicator的颜色
-        tabs.setIndicatorColor(getResources().getColor(R.color.indicatorcolor));
+        tabs.setIndicatorColor(getResources().getColor(R.color.translucent_lght_grey));
         // 设置选中Tab文字的颜色 (这是我自定义的一个方法)
-        tabs.setSelectedTextColor(getResources().getColor(R.color.selectedtextcolor));
+        tabs.setSelectedTextColor(getResources().getColor(R.color.white));
         // 取消点击Tab时的背景色
         tabs.setTabBackground(0);
     }
@@ -146,8 +151,9 @@ public class TintinShareActivity extends PhotoFragmentActivity implements View.O
         public Fragment getItem(int position) {
             return fragments[position];
         }
-    }
 
+
+    }
 
     /**
      * 添加图片

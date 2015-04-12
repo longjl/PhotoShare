@@ -11,6 +11,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/deps" />
             <option value="$PROJECT_DIR$/deps/PhotoProcessing" />
+            <option value="$PROJECT_DIR$/deps/PullToRefreshLibrary" />
             <option value="$PROJECT_DIR$/deps/actionbarsherlock" />
           </set>
         </option>

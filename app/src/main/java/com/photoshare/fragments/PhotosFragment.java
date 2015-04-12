@@ -1,12 +1,10 @@
 package com.photoshare.fragments;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
@@ -18,13 +16,14 @@ import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
@@ -36,7 +35,6 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.commonsware.cwac.merge.MergeAdapter;
 import com.photoshare.Constants;
 import com.photoshare.Flags;
-import com.photoshare.PhotoApplication;
 import com.photoshare.PhotoController;
 import com.photoshare.R;
 import com.photoshare.activities.PhotoViewerActivity;
@@ -106,7 +104,7 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
 
     static final String LOADER_PHOTOS_BUCKETS_PARAM = "bucket_id";
     static final int LOADER_USER_PHOTOS_EXTERNAL = 0x01;
-
+    private DisplayMetrics dm;
     private MergeAdapter mAdapter;
     private PhotosCursorAdapter mPhotoAdapter;
     private GridView mPhotoGrid;
@@ -175,12 +173,14 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
         super.onCreate(savedInstanceState);
 
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        dm = getResources().getDisplayMetrics();        //获取屏幕分辨率
         mAdapter = new MergeAdapter();
         if (Utils.hasCamera(getActivity())) {
             mAdapter.addAdapter(new CameraBaseAdapter(getActivity()));
         }
         mPhotoAdapter = new PhotosCursorAdapter(getActivity(), null);
         mAdapter.addAdapter(mPhotoAdapter);
+        bucketAdapter = new BucketAdapter(getActivity(), mBuckets);
         EventBus.getDefault().register(this);
     }
 
@@ -221,7 +221,6 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
         mPhotoGrid = (GridView) view.findViewById(R.id.gv_photos);
         mPhotoGrid.setAdapter(mAdapter);
         mPhotoGrid.setOnItemClickListener(this);
-        initPopupWindow();
         return view;
     }
 
@@ -264,10 +263,10 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
 
             Intent intent = new Intent(getActivity(), PhotoViewerActivity.class);
             // Need take Camera icon into account so minus 1
-            intent.putExtra(PhotoViewerActivity.EXTRA_POSITION, position - 1);
-            intent.putExtra(PhotoViewerActivity.EXTRA_MODE, PhotoViewerActivity.MODE_ALL_VALUE);
+            intent.putExtra(Constants.EXTRA_POSITION, position - 1);
+            intent.putExtra(Constants.EXTRA_MODE, PhotoViewerActivity.MODE_ALL_VALUE);
 
-            intent.putExtra(PhotoViewerActivity.EXTRA_BUCKET_ID, getSelectedBucketFromPrefs());
+            intent.putExtra(Constants.EXTRA_BUCKET_ID, getSelectedBucketFromPrefs());
             ActivityCompat.startActivity(getActivity(), intent, b);
         }
     }
@@ -415,29 +414,37 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
     }
 
     /**
-     * 初始化
-     */
-    private void initPopupWindow() {
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        popupWindowView = inflater.inflate(R.layout.fragment_popupwindow_bucket, null);
-        popupWindow = new PopupWindow(popupWindowView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-        popupWindow.setBackgroundDrawable(new BitmapDrawable(getResources(), (Bitmap) null));
-        //设置PopupWindow的弹出和消失效果
-        popupWindow.setAnimationStyle(R.style.popupAnimation);
-        btn_cancel = (Button) popupWindowView.findViewById(R.id.btn_cancel);
-        btn_cancel.setOnClickListener(this);
-        lv_bucket = (ListView) popupWindowView.findViewById(R.id.lv_bucket);
-        bucketAdapter = new BucketAdapter(getActivity(), mBuckets);
-        lv_bucket.setAdapter(bucketAdapter);
-        lv_bucket.setOnItemClickListener(this);
-    }
-
-    /**
      * 分享弹出框
      */
     private void showPopupWindow() {
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        popupWindowView = inflater.inflate(R.layout.fragment_popupwindow_bucket, null);
+        popupWindow = new PopupWindow(popupWindowView, ViewGroup.LayoutParams.MATCH_PARENT, dm.heightPixels / 2 + 300, true);
+        ColorDrawable cd = new ColorDrawable(0x000000);
+        popupWindow.setBackgroundDrawable(cd);
+
+        //产生背景变暗效果
+        WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
+        lp.alpha = 0.4f;
+        getActivity().getWindow().setAttributes(lp);
+
+        //设置PopupWindow的弹出和消失效果
+        popupWindow.setAnimationStyle(R.style.popupAnimation);
+        popupWindow.update();
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            //在dismiss中恢复透明度
+            public void onDismiss() {
+                WindowManager.LayoutParams lp = getActivity().getWindow().getAttributes();
+                lp.alpha = 1f;
+                getActivity().getWindow().setAttributes(lp);
+            }
+        });
+
+        btn_cancel = (Button) popupWindowView.findViewById(R.id.btn_cancel);
+        btn_cancel.setOnClickListener(this);
+        lv_bucket = (ListView) popupWindowView.findViewById(R.id.lv_bucket);
+        lv_bucket.setAdapter(bucketAdapter);
+        lv_bucket.setOnItemClickListener(this);
         popupWindow.showAtLocation(lv_bucket, Gravity.BOTTOM, 0, 0);
     }
 

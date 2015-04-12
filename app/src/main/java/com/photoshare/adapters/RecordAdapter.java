@@ -1,6 +1,7 @@
 package com.photoshare.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,9 @@ import android.widget.TextView;
 import com.photoshare.R;
 import com.photoshare.model.Record;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -18,6 +22,9 @@ import java.util.List;
 public class RecordAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private List<Record> records;
+    private SimpleDateFormat sdfM = new SimpleDateFormat("M月");
+    private SimpleDateFormat sdfD = new SimpleDateFormat("dd");
+    private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public RecordAdapter(Context context, List<Record> records) {
         this.inflater = LayoutInflater.from(context);
@@ -46,19 +53,28 @@ public class RecordAdapter extends BaseAdapter {
             view = inflater.inflate(R.layout.item_list_record, null);
             holder = new ViewHolder();
             holder.tv_content = (TextView) view.findViewById(R.id.tv_content);
-            holder.tv_date = (TextView) view.findViewById(R.id.tv_date);
+            holder.tv_d = (TextView) view.findViewById(R.id.tv_d);
+            holder.tv_m = (TextView) view.findViewById(R.id.tv_m);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();
         }
-        holder.tv_content.setText(records.get(position).content);
-        holder.tv_date.setText(records.get(position).date);
+        Record record = getItem(position);
+        holder.tv_content.setText(record.content);
+        try {
+            Date date = format.parse(record.date);
+            holder.tv_d.setText(sdfD.format(date));
+            holder.tv_m.setText(sdfM.format(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         return view;
     }
 
     class ViewHolder {
         public TextView tv_content;
-        public TextView tv_date;
+        public TextView tv_d;
+        public TextView tv_m;
     }
 
 }

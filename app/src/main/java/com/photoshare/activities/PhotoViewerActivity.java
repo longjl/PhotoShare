@@ -22,6 +22,7 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.photoshare.Constants;
 import com.photoshare.PhotoController;
 import com.photoshare.R;
 import com.photoshare.adapters.PhotosViewPagerAdapter;
@@ -49,9 +50,6 @@ public class PhotoViewerActivity extends PhotoFragmentActivity implements OnSing
         OnCheckedChangeListener, OnPageChangeListener,
         LoaderManager.LoaderCallbacks<Cursor> {
 
-    public static final String EXTRA_POSITION = "extra_position";
-    public static final String EXTRA_MODE = "extra_mode";
-    public static final String EXTRA_BUCKET_ID = "extra_bucket_id";
 
     public static int MODE_ALL_VALUE = 100;
     public static int MODE_SELECTED_VALUE = 101;
@@ -256,10 +254,10 @@ public class PhotoViewerActivity extends PhotoFragmentActivity implements OnSing
         EventBus.getDefault().register(this);
 
         final Intent intent = getIntent();
-        mMode = intent.getIntExtra(EXTRA_MODE, MODE_ALL_VALUE);
+        mMode = intent.getIntExtra(Constants.EXTRA_MODE, MODE_ALL_VALUE);
 
         if (mMode == MODE_ALL_VALUE) {
-            mBucketId = intent.getStringExtra(EXTRA_BUCKET_ID);
+            mBucketId = intent.getStringExtra(Constants.EXTRA_BUCKET_ID);
         }
 
         mViewPager = (ViewPager) findViewById(R.id.vp_photos);
@@ -275,8 +273,8 @@ public class PhotoViewerActivity extends PhotoFragmentActivity implements OnSing
         }
         mViewPager.setAdapter(mAdapter);
 
-        if (intent.hasExtra(EXTRA_POSITION)) {
-            mRequestedPosition = intent.getIntExtra(EXTRA_POSITION, 0);
+        if (intent.hasExtra(Constants.EXTRA_POSITION)) {
+            mRequestedPosition = intent.getIntExtra(Constants.EXTRA_POSITION, 0);
             mViewPager.setCurrentItem(mRequestedPosition);
         }
 

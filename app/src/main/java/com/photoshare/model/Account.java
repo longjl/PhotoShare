@@ -27,6 +27,9 @@ public class Account {
     @DatabaseField(columnName = "use_data")
     public String use_data;//有效期
 
+    @DatabaseField(columnName = "use_status")
+    public int use_status;//如果use_status 的值为716(永久使用) ,否则将判断use_data的有效期
+
     @DatabaseField(columnName = "register_date")
     public String register_date;//注册日期
 }

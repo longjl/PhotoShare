@@ -12,7 +12,10 @@ import com.photoshare.model.Photo;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by longjianlin on 15/3/19.
@@ -81,22 +84,43 @@ public class MediaStoreCursorHelper {
      * @param items
      */
     public static void photosCursorToBucketList(Cursor cursor, ArrayList<MediaStoreBucket> items) {
-        final HashSet<String> bucketIds = new HashSet<String>();
+        //final HashSet<String> bucketIds = new HashSet<String>();
 
-        final int idColumn = cursor.getColumnIndex(MediaStore.Images.ImageColumns.BUCKET_ID);
-        final int nameColumn = cursor.getColumnIndex(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME);
 
+        final Map<String, MediaStoreBucket> map = new HashMap<String, MediaStoreBucket>();
+
+
+        final int idColumn = cursor.getColumnIndex(MediaStore.Images.ImageColumns.BUCKET_ID);//id
+        final int nameColumn = cursor.getColumnIndex(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME);//名字
+        final int dataColumn = cursor.getColumnIndex(MediaStore.Images.Media.DATA); //获取图片索引
+
+        Log.e("================count", cursor.getCount()+"");
         if (cursor.moveToFirst()) {
             do {
                 try {
                     final String bucketId = cursor.getString(idColumn);
-                    if (bucketIds.add(bucketId)) {
-                        items.add(new MediaStoreBucket(bucketId, cursor.getString(nameColumn)));
+                    final String imagePath = cursor.getString(dataColumn);
+                    if (map.containsKey(bucketId)) {
+                        map.get(bucketId).setImageCount(map.get(bucketId).getImageCount() + 1);
+                        if (imagePath != null && imagePath.lastIndexOf(".") > 0) {
+                            map.get(bucketId).setImagePath(imagePath);
+                        }
+                    } else {
+                        map.put(bucketId, new MediaStoreBucket(bucketId, cursor.getString(nameColumn), cursor.getColumnName(dataColumn), 1));
                     }
+                    /*if (bucketIds.add(bucketId)) {
+                        items.add(new MediaStoreBucket(bucketId, cursor.getString(nameColumn), cursor.getColumnName(imagePath), 0));
+                    }*/
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             } while (cursor.moveToNext());
+        }
+
+        if (map.size() > 0) {
+            for (Map.Entry<String, MediaStoreBucket> m : map.entrySet()) {
+                items.add(m.getValue());
+            }
         }
     }
 

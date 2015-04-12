@@ -16,5 +16,5 @@
 
 <com.photoshare.views.PhotoItemLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/gridview_item_dimension_user"
+    android:layout_height="@dimen/gridview_item_dimension_user_height"
     android:background="@drawable/photo_gallery_background" />
