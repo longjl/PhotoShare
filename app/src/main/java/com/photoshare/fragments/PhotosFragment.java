@@ -394,6 +394,7 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
         }
     }
 
+
     private String getSelectedBucketFromPrefs() {
         if (null != mPrefs) {
             return mPrefs.getString(PREF_SELECTED_MEDIA_BUCKET_ID, null);

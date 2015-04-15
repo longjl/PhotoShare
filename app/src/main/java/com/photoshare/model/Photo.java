@@ -71,7 +71,7 @@ public class Photo {
     static final String FIELD_RESULT_POST_ID = "r_post_id";
 
     static final float CROP_THRESHOLD = 0.01f; // 1%
-    static final int MINI_THUMBNAIL_SIZE = 600;
+    static final int MINI_THUMBNAIL_SIZE = 300;
     static final int MICRO_THUMBNAIL_SIZE = 96;
     static final float MIN_CROP_VALUE = 0.0f;
     static final float MAX_CROP_VALUE = 1.0f;
@@ -302,9 +302,9 @@ public class Photo {
     }
 
     public Bitmap getThumbnailImage(Context context) {
-        //if (ContentResolver.SCHEME_CONTENT.equals(getOriginalPhotoUri().getScheme())) {
-        //  return getThumbnailImageFromMediaStore(context);
-        //}
+        if (ContentResolver.SCHEME_CONTENT.equals(getOriginalPhotoUri().getScheme())) {
+          return getThumbnailImageFromMediaStore(context);
+        }
 
         final Resources res = context.getResources();
         int size = res.getBoolean(R.bool.load_mini_thumbnails) ? MINI_THUMBNAIL_SIZE : MICRO_THUMBNAIL_SIZE;
@@ -318,50 +318,6 @@ public class Photo {
             return bitmap;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            return null;
-        }
-    }
-
-    public Bitmap getThumbnailImage(Context context, Uri mFullUri) {
-        //if (ContentResolver.SCHEME_CONTENT.equals(getOriginalPhotoUri().getScheme())) {
-        //  return getThumbnailImageFromMediaStore(context);
-        //}
-
-        final Resources res = context.getResources();
-        int size = res.getBoolean(R.bool.load_mini_thumbnails) ? MINI_THUMBNAIL_SIZE : MICRO_THUMBNAIL_SIZE;
-        if (size == MINI_THUMBNAIL_SIZE && res.getBoolean(R.bool.sample_mini_thumbnails)) {
-            size /= 4;
-        }
-        try {
-            Bitmap bitmap = Utils
-                    .decodeImage(context.getContentResolver(), mFullUri, size);
-            bitmap = Utils.rotate(bitmap, getExifRotation(context));
-            return bitmap;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public Bitmap getThumbnailImageFromMediaStore(Context context, Uri mFullUri) {
-        Resources res = context.getResources();
-
-        final int kind = res.getBoolean(R.bool.load_mini_thumbnails) ? MediaStore.Images.Thumbnails.MINI_KIND
-                : MediaStore.Images.Thumbnails.MICRO_KIND;
-
-        BitmapFactory.Options opts = null;
-        if (kind == MediaStore.Images.Thumbnails.MINI_KIND && res.getBoolean(R.bool.sample_mini_thumbnails)) {
-            opts = new BitmapFactory.Options();
-            opts.inSampleSize = 2;
-        }
-
-        try {
-            final long id = Long.parseLong(mFullUri.getLastPathSegment());
-
-            Bitmap bitmap = MediaStore.Images.Thumbnails.getThumbnail(context.getContentResolver(), id, kind, opts);
-            bitmap = Utils.rotate(bitmap, getExifRotation(context));
-            return bitmap;
-        } catch (Exception e) {
             return null;
         }
     }

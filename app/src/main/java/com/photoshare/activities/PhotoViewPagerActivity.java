@@ -47,9 +47,7 @@ public class PhotoViewPagerActivity extends PhotoFragmentActivity implements Vie
         mAdapter = new PhotoViewPagerAdapter(this, photos);
         mViewPager.setAdapter(mAdapter);
         intent = getIntent();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
         /**
          * Nasty hack, basically we need to know when the ViewPager is laid out,
          * we then manually call onPageSelected. This is to fix onPageSelected
@@ -68,9 +66,12 @@ public class PhotoViewPagerActivity extends PhotoFragmentActivity implements Vie
     @Override
     public void onStart() {
         super.onStart();
+        getSupportActionBar().setDisplayShowHomeEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if (intent.hasExtra(Constants.RECORD_ID)) {
             RecordAsyncTask.execute(this, this, intent.getIntExtra(Constants.RECORD_ID, -1));
         }
+
     }
 
     @Override

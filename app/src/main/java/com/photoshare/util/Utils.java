@@ -31,6 +31,7 @@ import com.photoshare.R;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Locale;
 
 /**
  * Created by longjianlin on 15/3/19.
@@ -239,7 +240,7 @@ public class Utils {
         if (distance < 1000) {
             return distance + "m";
         } else {
-            return String.format("%.2fkm", distance / 1000f);
+            return String.format(Locale.ENGLISH, "%.2fkm", distance / 1000f);
         }
     }
 

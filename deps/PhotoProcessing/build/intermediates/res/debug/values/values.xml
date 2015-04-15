@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <!-- From: file:/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/res/values/strings.xml -->
-    <eat-comment />
-
+    <eat-comment/>
     <string name="app_name">PhotoProcessing</string>
     <string name="applying_filter">Applying %s filter…</string>
     <string name="edit_action_flip">Flip</string>
@@ -33,5 +31,4 @@
     <string name="toast_hint_filter">Apply photo effects</string>
     <string name="toast_hint_gallery">Pick from gallery</string>
     <string name="toast_hint_save">Save the photo</string>
-
 </resources>

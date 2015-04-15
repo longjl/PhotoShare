@@ -2,7 +2,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="TintinShareTheme">
+    <style name="AppTheme" parent="PhotoShareTheme">
         <!-- Customize your theme here. -->
     </style>
 
@@ -10,8 +10,10 @@
     <style name="PhotosGridView">
         <item name="android:horizontalSpacing">@dimen/gridview_spacing</item>
         <!--<item name="android:listSelector">@drawable/selectable_background_photup</item>-->
-        <!--<item name="android:paddingLeft">@dimen/gridview_spacing</item>-->
-        <!--<item name="android:paddingRight">@dimen/gridview_spacing</item>-->
+        <item name="android:paddingTop">@dimen/gridview_spacing</item>
+        <item name="android:paddingBottom">@dimen/gridview_spacing</item>
+        <item name="android:paddingLeft">@dimen/gridview_spacing</item>
+        <item name="android:paddingRight">@dimen/gridview_spacing</item>
         <item name="android:numColumns">auto_fit</item>
         <item name="android:stretchMode">columnWidth</item>
         <item name="android:verticalSpacing">@dimen/gridview_spacing</item>
@@ -37,7 +39,7 @@
         <item name="android:windowExitAnimation">@anim/out</item>
     </style>
 
-    <style name="Theme.Fullscreen" parent="TintinShareTheme">
+    <style name="Theme.Fullscreen" parent="PhotoShareTheme">
         <item name="android:windowFullscreen">true</item>
     </style>
 

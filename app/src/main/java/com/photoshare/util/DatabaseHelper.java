@@ -1,7 +1,6 @@
 package com.photoshare.util;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -22,7 +21,7 @@ import java.sql.SQLException;
  */
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final Class<?>[] DATA_CLASSES = {Photo.class, Record.class, Account.class, History.class};
-    public static final String DATABASE_NAME = "/sdcard/photoshare/photo.db";      //数据库名字
+    public static final String DATABASE_NAME = "photo.db";      //数据库名字/sdcard/photoshare/
     private static final int DATABASE_VERSION = 1;             //版本号
 
     private Dao<Photo, String> mPhotoDao = null;
@@ -117,7 +116,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 
     /**
-     * Account dao
+     * History dao
      *
      * @return
      * @throws SQLException

@@ -57,14 +57,13 @@ public class HistoryFragment extends SherlockFragment implements HistoryAsyncTas
 
     private HistoryAdapter adapter;
     private LinkedList<Record> records = new LinkedList<Record>();
-    private boolean isInit; // 是否可以开始加载数据
     private int gesture = 0;//如果gesture=1表示下拉 ,gesture=0表示上推,gesture=200表示自由查询
     private String currentDate;
+    private int sharePosition = 0;//记录分享的位置
 
     private static Context mContext;
     private Map<Integer, Record> map = new HashMap<Integer, Record>();
     private SimpleDateFormat format = new SimpleDateFormat(Constants.DATE_FORMAT);
-    private boolean flag = true;//表示第一次刷新
 
     private static PhotoApplication app;
 
@@ -98,7 +97,6 @@ public class HistoryFragment extends SherlockFragment implements HistoryAsyncTas
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         app = PhotoApplication.getApplication(mContext);
-        isInit = true;
         currentDate = format.format(new Date());
 
         mPullRefreshScrollView = (PullToRefreshScrollView) view.findViewById(R.id.pull_refresh_scrollview);
@@ -151,10 +149,10 @@ public class HistoryFragment extends SherlockFragment implements HistoryAsyncTas
      * @date 2014-1-16
      */
     private void initData() {
-        if (isInit) {
-            isInit = false;//加载数据完成
-            sendMessage(currentDate, gesture);
+        if (currentDate == null) {
+            currentDate = format.format(new Date());
         }
+        sendMessage(currentDate, gesture);
     }
 
     /**
@@ -195,24 +193,23 @@ public class HistoryFragment extends SherlockFragment implements HistoryAsyncTas
     @Override
     public void onRecordsLoaded(List<Record> records) {
         if (records != null && records.size() > 0) {
+            if (gesture == 200) {
+                this.records.clear();
+                map.clear();
+            }
             for (Record record : records) {
                 if (!map.containsKey(record._id)) {
                     if (gesture == 1) {
                         this.records.addFirst(record);
                     } else if (gesture == 0) {
                         this.records.addLast(record);
-                    } else {
-                        if (flag) {
-                            this.records.add(record);
-                        } else {
-                            this.records.addFirst(record);
-                        }
+                    } else if (gesture == 200) {
+                        this.records.add(record);
                     }
                     map.put(record._id, record);
                 }
             }
             adapter.notifyDataSetChanged();
-            flag = false;
         }
         handler.sendEmptyMessage(200);
     }
@@ -286,10 +283,11 @@ public class HistoryFragment extends SherlockFragment implements HistoryAsyncTas
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (mPhotoListView.getId() == parent.getId()) {
+            sharePosition = position;
             showSharePopupWindow();
         } else if (gv_share != null && gv_share.getId() == parent.getId()) {
             String platform = shareAdapter.getItem(position);
-            uninstallSoftware(platform, adapter.getItem(position));
+            uninstallSoftware(platform, adapter.getItem(sharePosition));
         }
     }
 

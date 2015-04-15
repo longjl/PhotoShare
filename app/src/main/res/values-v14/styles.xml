@@ -2,21 +2,21 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="TintinShareTheme" parent="Theme.Sherlock.Light.DarkActionBar">
+    <style name="PhotoShareTheme" parent="Theme.Sherlock.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <!-- 改变action bar 的item 背景颜色 -->
         <!--<item name="android:actionBarItemBackground">@null</item>-->
-        <item name="android:actionBarStyle">@style/TintinShareActionBar</item>
+        <item name="android:actionBarStyle">@style/PhotoShareActionBar</item>
 
         <item name="android:actionBarDivider">@null</item>
         <item name="android:windowContentOverlay">@null</item>
         <!--<item name="android:homeAsUpIndicator">@drawable/ic_drawer</item>-->
 
-        <item name="android:windowBackground">@android:color/white</item>
-        <item name="android:colorBackground">@android:color/white</item>
+        <item name="android:windowBackground">@color/window_back_ground_color</item>
+        <item name="android:colorBackground">@color/window_back_ground_color</item>
     </style>
 
-    <style name="TintinShareActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+    <style name="PhotoShareActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="background">@color/actionbar_color</item>
         <item name="android:background">@color/actionbar_color</item>
 
@@ -26,5 +26,10 @@
     <style name="TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="PhotoShare_NoTitleBar" parent="Theme.Sherlock.Light.NoActionBar">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 </resources>

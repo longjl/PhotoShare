@@ -35,7 +35,7 @@ public class PhotoApplication extends Application {
         super.onCreate();
         initAccount();
         mPhotoController = new PhotoController(this);
-    }
+   }
 
     private void initAccount() {
         account = new Account();

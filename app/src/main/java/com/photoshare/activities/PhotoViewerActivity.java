@@ -280,9 +280,6 @@ public class PhotoViewerActivity extends PhotoFragmentActivity implements OnSing
 
         mFadeOutAnimation = AnimationUtils.loadAnimation(this, R.anim.photo_fade_out);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         /**
          * Nasty hack, basically we need to know when the ViewPager is laid out,
@@ -298,6 +295,13 @@ public class PhotoViewerActivity extends PhotoFragmentActivity implements OnSing
             }
         });
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(false);
     }
 
     @Override

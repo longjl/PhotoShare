@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name"></string>
-    <string name="app_name_">PhotoShare</string>
-    <string name="app_title">(%1$d)</string>
+    <string name="app_name">照片分享</string>
+    <string name="app_title">照片分享(%1$d)</string>
 
     <string name="action_share">分享</string>
     <string name="action_bucket">图片分类</string>
     <string name="action_share_record">分享记录</string>
     <string name="text_image_count">(%1$d)</string>
 
+    <string name="mobile_hint">输入手机号码</string>
+    <string name="pwd_hint">输入密码</string>
+    <string name="login_prompt">登录</string>
+    <string name="mobile_is_not_null">手机号码不能为空</string>
+    <string name="pwd_is_not_null">密码不能为空</string>
+    <string name="login_fail">登录失败</string>
 
     <string name="delete_success">删除成功</string>
     <string name="delete_msg">您确定要删除这条数据吗?</string>
@@ -52,4 +57,19 @@
     <string name="sina_weibo_exception">需要安装新浪微博客户端</string>
     <string name="WebChat_Moments_exception">需要安装微信户端</string>
     <string name="cancel_prompt">取 消</string>
+
+
+    <!-- 环信 -->
+    <string name="Application_and_notify">invitation and notification</string>
+    <string name="group_chat">group chat</string>
+    <string name="add_friend">add friends</string>
+    <string name="location_recv">[%1$s location]</string>
+    <string name="location_prefix">[my location]</string>
+    <string name="voice">voice</string>
+    <string name="picture">[picture]</string>
+    <string name="video">[video]</string>
+    <string name="file">[file]</string>
+    <string name="voice_call">[voice call]</string>
+
+
 </resources>

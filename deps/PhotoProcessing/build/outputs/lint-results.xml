@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="4" by="lint 23">
+
+    <issue
+        id="GradleDeprecated"
+        severity="Warning"
+        message="&apos;android-library&apos; is deprecated; use &apos;com.android.library&apos; instead"
+        category="Correctness"
+        priority="6"
+        summary="Deprecated Gradle Construct"
+        explanation="This detector looks for deprecated Gradle constructs which currently work but will likely stop working in a future update."
+        errorLine1="apply plugin: &apos;android-library&apos;"
+        errorLine2="~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        quickfix="studio">
+        <location
+            file="/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/build.gradle"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="OldTargetApi"
+        severity="Warning"
+        message="Not targeting the latest versions of Android; compatibility modes apply. Consider testing and updating this version. Consult the android.os.Build.VERSION_CODES javadoc for details."
+        category="Correctness"
+        priority="6"
+        summary="Target SDK attribute is not targeting latest version"
+        explanation="When your application runs on a version of Android that is more recent than your `targetSdkVersion` specifies that it has been tested with, various compatibility modes kick in. This ensures that your application continues to work, but it may look out of place. For example, if the `targetSdkVersion` is less than 14, your app may get an option button in the UI.
+
+To fix this issue, set the `targetSdkVersion` to the highest available value. Then test your app to make sure everything works correctly. You may want to consult the compatibility notes to see what changes apply to each version you are adding support for: http://developer.android.com/reference/android/os/Build.VERSION_CODES.html"
+        url="http://developer.android.com/reference/android/os/Build.VERSION_CODES.html"
+        urls="http://developer.android.com/reference/android/os/Build.VERSION_CODES.html"
+        errorLine1="        targetSdkVersion 19"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~"
+        quickfix="studio">
+        <location
+            file="/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/build.gradle"
+            line="9"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="GradleDynamicVersion"
+        severity="Warning"
+        message="Avoid using + in version numbers; can lead to unpredictable and unrepeatable builds (com.android.support:support-v4:20.0.+)"
+        category="Correctness"
+        priority="4"
+        summary="Gradle Dynamic Version"
+        explanation="Using `+` in dependencies lets you automatically pick up the latest available version rather than a specific, named version. However, this is not recommended; your builds are not repeatable; you may have tested with a slightly different version than what the build server used. (Using a dynamic version as the major version number is more problematic than using it in the minor version position.)"
+        errorLine1="    compile &apos;com.android.support:support-v4:20.0.+&apos;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+        quickfix="studio">
+        <location
+            file="/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/build.gradle"
+            line="27"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="FloatMath"
+        severity="Warning"
+        message="Use `java.lang.Math#floor` instead of `android.util.FloatMath#floor()` since it is faster as of API 8"
+        category="Performance"
+        priority="3"
+        summary="Using `FloatMath` instead of `Math`"
+        explanation="In older versions of Android, using `android.util.FloatMath` was recommended for performance reasons when operating on floats. However, on modern hardware doubles are just as fast as float (though they take more memory), and in recent versions of Android, `FloatMath` is actually slower than using `java.lang.Math` due to the way the JIT optimizes `java.lang.Math`. Therefore, you should use `Math` instead of `FloatMath` if you are only targeting Froyo and above."
+        url="http://developer.android.com/guide/practices/design/performance.html#avoidfloat"
+        urls="http://developer.android.com/guide/practices/design/performance.html#avoidfloat"
+        errorLine1="             inSampleSize = (int)FloatMath.floor(((float)height / reqHeight)+0.5f); //Math.round((float)height / (float)reqHeight);"
+        errorLine2="                                           ~~~~~">
+        <location
+            file="/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/src/com/lightbox/android/photoprocessing/utils/BitmapUtils.java"
+            line="46"
+            column="44"/>
+    </issue>
+
+    <issue
+        id="FloatMath"
+        severity="Warning"
+        message="Use `java.lang.Math#floor` instead of `android.util.FloatMath#floor()` since it is faster as of API 8"
+        category="Performance"
+        priority="3"
+        summary="Using `FloatMath` instead of `Math`"
+        explanation="In older versions of Android, using `android.util.FloatMath` was recommended for performance reasons when operating on floats. However, on modern hardware doubles are just as fast as float (though they take more memory), and in recent versions of Android, `FloatMath` is actually slower than using `java.lang.Math` due to the way the JIT optimizes `java.lang.Math`. Therefore, you should use `Math` instead of `FloatMath` if you are only targeting Froyo and above."
+        url="http://developer.android.com/guide/practices/design/performance.html#avoidfloat"
+        urls="http://developer.android.com/guide/practices/design/performance.html#avoidfloat"
+        errorLine1="             inSampleSize = (int)FloatMath.floor(((float)width / reqWidth)+0.5f); //Math.round((float)width / (float)reqWidth);"
+        errorLine2="                                           ~~~~~">
+        <location
+            file="/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/src/com/lightbox/android/photoprocessing/utils/BitmapUtils.java"
+            line="48"
+            column="44"/>
+    </issue>
+
+    <issue
+        id="FloatMath"
+        severity="Warning"
+        message="Use `java.lang.Math#sqrt` instead of `android.util.FloatMath#sqrt()` since it is faster as of API 8"
+        category="Performance"
+        priority="3"
+        summary="Using `FloatMath` instead of `Math`"
+        explanation="In older versions of Android, using `android.util.FloatMath` was recommended for performance reasons when operating on floats. However, on modern hardware doubles are just as fast as float (though they take more memory), and in recent versions of Android, `FloatMath` is actually slower than using `java.lang.Math` due to the way the JIT optimizes `java.lang.Math`. Therefore, you should use `Math` instead of `FloatMath` if you are only targeting Froyo and above."
+        url="http://developer.android.com/guide/practices/design/performance.html#avoidfloat"
+        urls="http://developer.android.com/guide/practices/design/performance.html#avoidfloat"
+        errorLine1="  int scaledHeight = (int)FloatMath.sqrt((float)numPixels/ratio);"
+        errorLine2="                                    ~~~~">
+        <location
+            file="/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/src/com/lightbox/android/photoprocessing/utils/BitmapUtils.java"
+            line="70"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="FloatMath"
+        severity="Warning"
+        message="Use `java.lang.Math#sqrt` instead of `android.util.FloatMath#sqrt()` since it is faster as of API 8"
+        category="Performance"
+        priority="3"
+        summary="Using `FloatMath` instead of `Math`"
+        explanation="In older versions of Android, using `android.util.FloatMath` was recommended for performance reasons when operating on floats. However, on modern hardware doubles are just as fast as float (though they take more memory), and in recent versions of Android, `FloatMath` is actually slower than using `java.lang.Math` due to the way the JIT optimizes `java.lang.Math`. Therefore, you should use `Math` instead of `FloatMath` if you are only targeting Froyo and above."
+        url="http://developer.android.com/guide/practices/design/performance.html#avoidfloat"
+        urls="http://developer.android.com/guide/practices/design/performance.html#avoidfloat"
+        errorLine1="  int scaledWidth = (int)(ratio * FloatMath.sqrt((float)numPixels/ratio));"
+        errorLine2="                                            ~~~~">
+        <location
+            file="/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/src/com/lightbox/android/photoprocessing/utils/BitmapUtils.java"
+            line="71"
+            column="45"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        severity="Warning"
+        message="The resource `R.string.toast_hint_gallery` appears to be unused"
+        category="Performance"
+        priority="3"
+        summary="Unused resources"
+        explanation="Unused resources make applications larger and slow down builds."
+        errorLine1="    &lt;string name=&quot;toast_hint_gallery&quot;>Pick from gallery&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/res/values/strings.xml"
+            line="5"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        severity="Warning"
+        message="The resource `R.string.toast_hint_camera` appears to be unused"
+        category="Performance"
+        priority="3"
+        summary="Unused resources"
+        explanation="Unused resources make applications larger and slow down builds."
+        errorLine1="    &lt;string name=&quot;toast_hint_camera&quot;>Use the camera&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/res/values/strings.xml"
+            line="6"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        severity="Warning"
+        message="The resource `R.string.toast_hint_filter` appears to be unused"
+        category="Performance"
+        priority="3"
+        summary="Unused resources"
+        explanation="Unused resources make applications larger and slow down builds."
+        errorLine1="    &lt;string name=&quot;toast_hint_filter&quot;>Apply photo effects&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/res/values/strings.xml"
+            line="7"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        severity="Warning"
+        message="The resource `R.string.toast_hint_edit` appears to be unused"
+        category="Performance"
+        priority="3"
+        summary="Unused resources"
+        explanation="Unused resources make applications larger and slow down builds."
+        errorLine1="    &lt;string name=&quot;toast_hint_edit&quot;>Flip/rotate the photo&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/res/values/strings.xml"
+            line="8"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        severity="Warning"
+        message="The resource `R.string.toast_hint_save` appears to be unused"
+        category="Performance"
+        priority="3"
+        summary="Unused resources"
+        explanation="Unused resources make applications larger and slow down builds."
+        errorLine1="    &lt;string name=&quot;toast_hint_save&quot;>Save the photo&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/res/values/strings.xml"
+            line="9"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        severity="Warning"
+        message="The resource `R.string.reverting_to_original` appears to be unused"
+        category="Performance"
+        priority="3"
+        summary="Unused resources"
+        explanation="Unused resources make applications larger and slow down builds."
+        errorLine1="    &lt;string name=&quot;reverting_to_original&quot;>Reverting to original&amp;#8230;&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/res/values/strings.xml"
+            line="32"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        severity="Warning"
+        message="The resource `R.string.applying_filter` appears to be unused"
+        category="Performance"
+        priority="3"
+        summary="Unused resources"
+        explanation="Unused resources make applications larger and slow down builds."
+        errorLine1="    &lt;string name=&quot;applying_filter&quot;>Applying %s filter&amp;#8230;&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/res/values/strings.xml"
+            line="33"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        severity="Warning"
+        message="The resource `R.string.flipping` appears to be unused"
+        category="Performance"
+        priority="3"
+        summary="Unused resources"
+        explanation="Unused resources make applications larger and slow down builds."
+        errorLine1="    &lt;string name=&quot;flipping&quot;>Flipping horizontally&amp;#8230;&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~">
+        <location
+            file="/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/res/values/strings.xml"
+            line="34"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        severity="Warning"
+        message="The resource `R.string.rotating_90_right` appears to be unused"
+        category="Performance"
+        priority="3"
+        summary="Unused resources"
+        explanation="Unused resources make applications larger and slow down builds."
+        errorLine1="    &lt;string name=&quot;rotating_90_right&quot;>Rotating 90° right&amp;#8230;&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/res/values/strings.xml"
+            line="35"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        severity="Warning"
+        message="The resource `R.string.rotating_90_left` appears to be unused"
+        category="Performance"
+        priority="3"
+        summary="Unused resources"
+        explanation="Unused resources make applications larger and slow down builds."
+        errorLine1="    &lt;string name=&quot;rotating_90_left&quot;>Rotating 90° left&amp;#8230;&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/res/values/strings.xml"
+            line="36"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        severity="Warning"
+        message="The resource `R.string.rotating_180` appears to be unused"
+        category="Performance"
+        priority="3"
+        summary="Unused resources"
+        explanation="Unused resources make applications larger and slow down builds."
+        errorLine1="    &lt;string name=&quot;rotating_180&quot;>Rotating 180°&amp;#8230;&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/res/values/strings.xml"
+            line="37"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        severity="Warning"
+        message="The resource `R.string.saved_photo_toast_message` appears to be unused"
+        category="Performance"
+        priority="3"
+        summary="Unused resources"
+        explanation="Unused resources make applications larger and slow down builds."
+        errorLine1="    &lt;string name=&quot;saved_photo_toast_message&quot;>Saved photo to %s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="/Users/longjianlin/Documents/longjl-dev/PhotoShare/deps/PhotoProcessing/res/values/strings.xml"
+            line="40"
+            column="13"/>
+    </issue>
+
+</issues>

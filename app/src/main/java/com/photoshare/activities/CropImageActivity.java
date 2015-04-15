@@ -43,7 +43,6 @@ public class CropImageActivity extends PhotoFragmentActivity implements PhotoIma
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //getSupportActionBar().setBackgroundDrawable(getResources().getDrawable(R.color.window_back_ground_color));
 
         mCropImageView = new CropImageView(this, null);
         Platform.disableHardwareAcceleration(mCropImageView);
@@ -55,6 +54,12 @@ public class CropImageActivity extends PhotoFragmentActivity implements PhotoIma
         CROP_SELECTION = null;
 
         mCropImageView.requestFullSize(mPhotoUpload, false, this);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getSupportActionBar().setDisplayShowHomeEnabled(false);
     }
 
     @Override

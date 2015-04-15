@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2013 Chris Banes
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,11 +14,10 @@
   ~ limitations under the License.
   -->
 
-<shape xmlns:android="http://schemas.android.com/apk/res/android" type="rectangle">
-
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
     <gradient
         android:angle="270"
-        android:endColor="@color/chrome_custom_background_alpha"
-        android:startColor="@color/chrome_custom_background_alpha" />
-
+        android:centerColor="#ff6FCDF7"
+        android:endColor="#ff6FCDF7"
+        android:startColor="#ff6FCDF7" />
 </shape>

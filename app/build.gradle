@@ -2,19 +2,50 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "20.0.0"
-
+    buildToolsVersion '20.0.0'
     defaultConfig {
-        applicationId "com.tintinshare"
-        minSdkVersion 19
+        applicationId 'com.photoshare'
+        minSdkVersion 14
         targetSdkVersion 19
         versionCode 1
-        versionName "1.0"
+        versionName '1.0'
     }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    signingConfigs {
+        debug {
+            // No debug config
+        }
+        release {
+            storeFile file("/Users/longjianlin/Documents/longjl-dev/PhotoShare/keystore/photoshare.jks")
+            storePassword "123456"
+            keyAlias "photoshare"
+            keyPassword "123456"
+        }
+    }
+
     buildTypes {
         release {
-            runProguard false
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            zipAlignEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    //打包渠道
+    productFlavors {
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def outputFile = output.outputFile
+            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                def fileName = outputFile.name.replace(".apk", "-${defaultConfig.versionName}.apk")
+                output.outputFile = new File(outputFile.parent, fileName)
+            }
         }
     }
 }
@@ -22,7 +53,6 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:support-v4:20.0.+'
-
     compile(
             project(':deps:actionbarsherlock'),
             project(':deps:PhotoProcessing'),

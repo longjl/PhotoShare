@@ -54,7 +54,7 @@ public class HistoryDatabaseHelper {
                                 e.printStackTrace();
                             }
                         } finally {
-
+                            OpenHelperManager.releaseHelper();
                         }
                     }
                 }

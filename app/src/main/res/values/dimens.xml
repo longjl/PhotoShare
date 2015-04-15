@@ -1,5 +1,5 @@
 <resources>
-    <dimen name="gridview_spacing">3dp</dimen>
+    <dimen name="gridview_spacing">5dp</dimen>
     <dimen name="selected_gridview_spacing">5dp</dimen>
 
     <dimen name="gridview_item_dimension_user_small">105dp</dimen>

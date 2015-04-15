@@ -18,3 +18,32 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+# Add any project specific keep options here:
+
+# Keep Line Numbers
+-keepattributes SourceFile,LineNumberTable
+
+# Actionbarsherlock
+-keepattributes *Annotation*
+-keep class com.actionbarsherlock.** { *; }
+-keep interface com.actionbarsherlock.** { *; }
+
+
+# For ORMLite
+-keep class com.j256.**
+-keepclassmembers class com.j256.** { *; }
+-keep enum com.j256.**
+-keepclassmembers enum com.j256.** { *; }
+-keep interface com.j256.**
+-keepclassmembers interface com.j256.** { *; }
+-keepclassmembers class uk.co.senab.photup.DatabaseHelper { *; }
+
+# For EventBus
+-keepclassmembers class ** {
+	public void onEvent(**);
+	public void onEventMainThread(**);
+}
+
+# Crittercism
+-keep public class com.crittercism.**
+-keepclassmembers public class com.crittercism.* { *; }
