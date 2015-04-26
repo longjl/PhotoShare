@@ -29,6 +29,7 @@ public class Constants {
     public static final String PREF_MOBILE = "mobile";
     public static final String PREF_PWD = "pwd";
 
+    public static final int CLIENT_TIMEOUT = 60 * 1000;//连接超时时间 1分钟
 
     public static final String NEW_FRIENDS_USERNAME = "item_new_friends";
     public static final String GROUP_USERNAME = "item_groups";

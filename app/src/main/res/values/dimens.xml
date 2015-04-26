@@ -1,5 +1,5 @@
 <resources>
-    <dimen name="gridview_spacing">5dp</dimen>
+    <dimen name="gridview_spacing">2dp</dimen>
     <dimen name="selected_gridview_spacing">5dp</dimen>
 
     <dimen name="gridview_item_dimension_user_small">105dp</dimen>
@@ -19,4 +19,9 @@
     <dimen name="viewpager_margin">4dp</dimen>
     <dimen name="filters_radiogroup_height">80dp</dimen>
     <dimen name="filters_textSize">11dp</dimen>
+
+    <!-- The width of the big icons in notifications. -->
+    <dimen name="notification_large_icon_width">64dp</dimen>
+    <!-- The width of the big icons in notifications. -->
+    <dimen name="notification_large_icon_height">64dp</dimen>
 </resources>

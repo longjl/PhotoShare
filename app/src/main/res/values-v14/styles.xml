@@ -17,15 +17,15 @@
     </style>
 
     <style name="PhotoShareActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="background">@color/actionbar_color</item>
-        <item name="android:background">@color/actionbar_color</item>
+        <item name="background">@color/blue_med</item>
+        <item name="android:background">@color/blue_med</item>
 
         <item name="android:titleTextStyle">@style/TitleTextStyle</item>
     </style>
 
     <style name="TitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/chrome_custom_background_alpha</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="PhotoShare_NoTitleBar" parent="Theme.Sherlock.Light.NoActionBar">

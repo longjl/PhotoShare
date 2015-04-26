@@ -3,7 +3,7 @@
     tools:context=".TintinShareActivity">
     <item
         android:id="@+id/action_bucket"
-        android:icon="@drawable/abc_spinner_ab_disabled_holo_dark"
+        android:icon="@android:drawable/ic_menu_more"
         android:showAsAction="ifRoom"
         android:title="@string/action_bucket"
         android:visible="false" />
@@ -13,10 +13,10 @@
         android:showAsAction="ifRoom"
         android:title="@string/action_share"
         android:visible="false" />
-
+    <!--android:icon="@drawable/abc_ic_menu_moreoverflow_normal_holo_dark"-->
     <item
         android:id="@+id/action_share_record"
-        android:icon="@drawable/abc_ic_menu_moreoverflow_normal_holo_dark"
+        android:icon="@android:drawable/ic_menu_add"
         android:showAsAction="ifRoom"
         android:title="@string/action_share_record"
         android:visible="false" />

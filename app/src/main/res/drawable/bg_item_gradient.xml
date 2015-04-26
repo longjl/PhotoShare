@@ -17,7 +17,7 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <gradient
         android:angle="270"
-        android:centerColor="#ff6FCDF7"
-        android:endColor="#ff6FCDF7"
-        android:startColor="#ff6FCDF7" />
+        android:centerColor="@color/photo_grid_color"
+        android:endColor="@color/photo_grid_color"
+        android:startColor="@color/photo_grid_color" />
 </shape>

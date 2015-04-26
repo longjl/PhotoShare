@@ -16,7 +16,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/mobile_hint"
-            android:inputType="phone" />
+            android:inputType="phone"
+            android:maxLength="11"
+            />
     </LinearLayout>
 
     <LinearLayout
@@ -35,6 +37,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:paddingTop="20dp">
 
         <Button
@@ -44,6 +47,16 @@
             android:background="@drawable/btn_cancel_bg"
             android:text="@string/login_prompt"
             android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:paddingTop="20dp"
+            android:text="@string/register_prompt"
+            android:textColor="@color/text_color"
             android:textSize="18sp" />
     </LinearLayout>
 

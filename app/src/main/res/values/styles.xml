@@ -10,10 +10,6 @@
     <style name="PhotosGridView">
         <item name="android:horizontalSpacing">@dimen/gridview_spacing</item>
         <!--<item name="android:listSelector">@drawable/selectable_background_photup</item>-->
-        <item name="android:paddingTop">@dimen/gridview_spacing</item>
-        <item name="android:paddingBottom">@dimen/gridview_spacing</item>
-        <item name="android:paddingLeft">@dimen/gridview_spacing</item>
-        <item name="android:paddingRight">@dimen/gridview_spacing</item>
         <item name="android:numColumns">auto_fit</item>
         <item name="android:stretchMode">columnWidth</item>
         <item name="android:verticalSpacing">@dimen/gridview_spacing</item>

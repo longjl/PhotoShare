@@ -15,9 +15,11 @@ import android.view.View;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.Window;
+import com.loopj.android.http.JsonHttpResponseHandler;
 import com.photoshare.PhotoApplication;
 import com.photoshare.PhotoController;
 import com.photoshare.R;
+import com.photoshare.URLs;
 import com.photoshare.base.PhotoFragmentActivity;
 import com.photoshare.events.PhotoSelectionAddedEvent;
 import com.photoshare.events.PhotoSelectionRemovedEvent;
@@ -25,8 +27,12 @@ import com.photoshare.events.UploadsModifiedEvent;
 import com.photoshare.fragments.HistoryFragment;
 import com.photoshare.fragments.PhotosFragment;
 import com.photoshare.fragments.SelectedPhotosFragment;
+import com.photoshare.network.PhotoClient;
 import com.photoshare.views.PagerSlidingTabStrip;
 import com.photoshare.views.ShareActionBarView;
+
+import org.apache.http.Header;
+import org.json.JSONObject;
 
 import de.greenrobot.event.EventBus;
 
@@ -111,9 +117,9 @@ public class PhotoShareActivity extends PhotoFragmentActivity implements View.On
         // 设置Tab底部线的高度
         tabs.setUnderlineHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, dm));
         // 设置Tab Indicator的高度
-        tabs.setIndicatorHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6, dm));
+        tabs.setIndicatorHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3, dm));
         // 设置Tab标题文字的大小
-        tabs.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 18, dm));
+        tabs.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16, dm));
         // 设置Tab Indicator的颜色
         tabs.setIndicatorColor(getResources().getColor(R.color.blue_med));
         // 设置选中Tab文字的颜色 (这是我自定义的一个方法)
@@ -277,4 +283,25 @@ public class PhotoShareActivity extends PhotoFragmentActivity implements View.On
         super.onStart();
         getSupportActionBar().setDisplayShowHomeEnabled(false);
     }
+
+
+    /**
+     * app 更新
+     */
+    private void update() {
+        PhotoClient.get(URLs.UPDATE_URL, null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                if (response.optInt("code") == 200) {
+
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+
+            }
+        });
+    }
+
 }

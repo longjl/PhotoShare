@@ -27,7 +27,7 @@
         android:layout_alignLeft="@+id/iv_action_upload"
         android:layout_alignRight="@+id/iv_action_upload"
         android:layout_alignTop="@+id/iv_action_upload"
-        android:background="@color/blue_med"
+        android:background="#bae4f8"
         android:visibility="gone" />
 
     <ImageView
@@ -36,6 +36,6 @@
         android:layout_height="match_parent"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
-        android:src="@drawable/abc_ic_menu_share_holo_light" />
+        android:src="@android:drawable/ic_menu_share" />
 
 </com.photoshare.views.ShareActionBarView>

@@ -18,12 +18,10 @@ import java.util.ArrayList;
 public class BucketAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     ArrayList<MediaStoreBucket> mBuckets;
-    private Context mContext;
 
     public BucketAdapter(Context context, ArrayList<MediaStoreBucket> buckets) {
         inflater = LayoutInflater.from(context);
         mBuckets = buckets;
-        mContext = context;
     }
 
     @Override
@@ -47,7 +45,6 @@ public class BucketAdapter extends BaseAdapter {
         if (view == null) {
             view = inflater.inflate(R.layout.item_bucket, null);
             holder = new ViewHolder();
-            //holder.iv_group = (ImageView) view.findViewById(R.id.iv_group);
             holder.tv_name = (TextView) view.findViewById(R.id.tv_name);
             holder.tv_count = (TextView) view.findViewById(R.id.tv_count);
             view.setTag(holder);
@@ -55,19 +52,6 @@ public class BucketAdapter extends BaseAdapter {
             holder = (ViewHolder) view.getTag();
         }
         MediaStoreBucket bucket = mBuckets.get(position);
-
-        /*String imagePath = bucket.getImagePath();
-        if (imagePath != null) {
-            File file = new File(imagePath);
-            if (file.exists()) {
-                Bitmap bitmap = new Photo(Uri.fromFile(file)).getThumbnailImage(mContext, Uri.fromFile(file));
-                if (bitmap != null) {
-                    holder.iv_group.setImageBitmap(bitmap);
-                }
-            }
-        }else{
-            holder.iv_group.setImageResource(R.drawable.nopicture_icon);
-        }*/
         holder.tv_name.setText(bucket.getName());
         if (bucket.getId() != null) {
             holder.tv_count.setText("(" + bucket.getImageCount() + ")");
@@ -78,7 +62,6 @@ public class BucketAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
-        //public ImageView iv_group;
         public TextView tv_name;
         public TextView tv_count;
     }

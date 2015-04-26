@@ -1,4 +1,4 @@
-package com.photoshare;
+package com.photoshare.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,7 +7,8 @@ import android.preference.PreferenceManager;
 import android.view.animation.AlphaAnimation;
 import android.widget.LinearLayout;
 
-import com.photoshare.activities.LoginActivity;
+import com.photoshare.Constants;
+import com.photoshare.R;
 import com.photoshare.base.PhotoFragmentActivity;
 
 /**
@@ -56,14 +57,12 @@ public class SplashActivity extends PhotoFragmentActivity {
     @Override
     protected void onStart() {
         super.onStart();
-       /* if (getMobileFromPrefs() != null && getPwdFromPrefs() != null) {
-            go();
+        if (getMobileFromPrefs() != null && getPwdFromPrefs() != null) {
+            startActivity(new Intent(SplashActivity.this, PhotoShareActivity.class));
+            finish();
         } else {
             startActivity(new Intent(SplashActivity.this, LoginActivity.class));
             finish();
-        }*/
-
-        startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-        finish();
+        }
     }
 }
