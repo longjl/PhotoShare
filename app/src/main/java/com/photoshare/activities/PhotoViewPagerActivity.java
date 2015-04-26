@@ -66,7 +66,7 @@ public class PhotoViewPagerActivity extends PhotoFragmentActivity implements Vie
     @Override
     public void onStart() {
         super.onStart();
-        getSupportActionBar().setDisplayShowHomeEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         if (intent.hasExtra(Constants.RECORD_ID)) {
             RecordAsyncTask.execute(this, this, intent.getIntExtra(Constants.RECORD_ID, -1));

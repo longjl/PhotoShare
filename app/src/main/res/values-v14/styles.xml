@@ -17,8 +17,8 @@
     </style>
 
     <style name="PhotoShareActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="background">@color/blue_med</item>
-        <item name="android:background">@color/blue_med</item>
+        <item name="background">@color/actionbar_color</item>
+        <item name="android:background">@color/actionbar_color</item>
 
         <item name="android:titleTextStyle">@style/TitleTextStyle</item>
     </style>

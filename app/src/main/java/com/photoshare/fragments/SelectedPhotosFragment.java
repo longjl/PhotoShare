@@ -124,7 +124,7 @@ public class SelectedPhotosFragment extends SherlockFragment
         return view;
     }
 
-
+    @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (mGridView != null && parent.getId() == mGridView.getId()) {
             Bundle b = null;
@@ -156,7 +156,7 @@ public class SelectedPhotosFragment extends SherlockFragment
             showToast(R.string.no_photo);
             return;
         }
-        if (platform.equals(Constants.SINA_WEIBO)) {
+        if (platform.equals(Constants.SINA_WEIBO)) {//新浪微博
             if (app.uninstallSoftware(getActivity(), Constants.SINA_WEIBO_APP)) {
                 handler.sendEmptyMessage(0);
 
@@ -167,7 +167,7 @@ public class SelectedPhotosFragment extends SherlockFragment
             } else {
                 Toast.makeText(getActivity(), R.string.sina_weibo_exception, Toast.LENGTH_SHORT).show();
             }
-        } else if (platform.equals(Constants.WEB_CHAT_MOMENTS)) {
+        } else if (platform.equals(Constants.WEB_CHAT_MOMENTS)) {//微信朋友圈
             if (app.uninstallSoftware(getActivity(), Constants.WEB_CHAT_MOMENTS_APP)) {
                 handler.sendEmptyMessage(0);
 
@@ -406,7 +406,7 @@ public class SelectedPhotosFragment extends SherlockFragment
     private ProgressDialog dialog;
 
     private void showProgressDialog() {
-        dialog = ProgressDialog.show(getActivity(), "", "数据传输中. 请稍等...", true, false);
+        dialog = ProgressDialog.show(getActivity(), "", "数据传输中. 请稍等...", true, true);
     }
 
     @Override

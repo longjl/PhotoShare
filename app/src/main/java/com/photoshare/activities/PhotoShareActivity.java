@@ -1,5 +1,8 @@
 package com.photoshare.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -27,7 +30,9 @@ import com.photoshare.events.UploadsModifiedEvent;
 import com.photoshare.fragments.HistoryFragment;
 import com.photoshare.fragments.PhotosFragment;
 import com.photoshare.fragments.SelectedPhotosFragment;
+import com.photoshare.model.Version;
 import com.photoshare.network.PhotoClient;
+import com.photoshare.service.NotificationDownloadService;
 import com.photoshare.views.PagerSlidingTabStrip;
 import com.photoshare.views.ShareActionBarView;
 
@@ -89,6 +94,8 @@ public class PhotoShareActivity extends PhotoFragmentActivity implements View.On
         mTabAdapter = new TabPagerAdapter(getSupportFragmentManager());
         tabsHandler.sendEmptyMessage(0);
         EventBus.getDefault().register(this);
+
+        update();
     }
 
     //tabs handler
@@ -117,9 +124,9 @@ public class PhotoShareActivity extends PhotoFragmentActivity implements View.On
         // 设置Tab底部线的高度
         tabs.setUnderlineHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1, dm));
         // 设置Tab Indicator的高度
-        tabs.setIndicatorHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3, dm));
+        tabs.setIndicatorHeight((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 6, dm));
         // 设置Tab标题文字的大小
-        tabs.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 16, dm));
+        tabs.setTextSize((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 18, dm));
         // 设置Tab Indicator的颜色
         tabs.setIndicatorColor(getResources().getColor(R.color.blue_med));
         // 设置选中Tab文字的颜色 (这是我自定义的一个方法)
@@ -262,7 +269,7 @@ public class PhotoShareActivity extends PhotoFragmentActivity implements View.On
 
     private CharSequence formatSelectedFragmentTitle() {
         if (mPhotoController.getSelectedCount() == 0) {
-            return getString(R.string.app_name);
+            return getString(R.string.app_title_null);
         } else {
             return getString(R.string.app_title, mPhotoController.getSelectedCount());
         }
@@ -281,9 +288,7 @@ public class PhotoShareActivity extends PhotoFragmentActivity implements View.On
     @Override
     public void onStart() {
         super.onStart();
-        getSupportActionBar().setDisplayShowHomeEnabled(false);
     }
-
 
     /**
      * app 更新
@@ -293,7 +298,31 @@ public class PhotoShareActivity extends PhotoFragmentActivity implements View.On
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 if (response.optInt("code") == 200) {
+                    final Version version = new Version(PhotoShareActivity.this, response.optInt("version_code"), response.optString("version_name"), response.optString("download_url"));
+                    if (version.isUpdate()) {
+                        //发现新版本，提示用户更新
+                        AlertDialog alert = new AlertDialog.Builder(PhotoShareActivity.this).setIcon(R.drawable.icon)
 
+                                .setTitle("提示")
+                                .setMessage("发现新版本,建议立即更新使用.")
+                                .setPositiveButton("立即更新", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        //开启更新服务NotificationDownloadService
+                                        Intent updateIntent = new Intent(PhotoShareActivity.this, NotificationDownloadService.class);
+                                        updateIntent.putExtra("id", 0);
+                                        updateIntent.putExtra("downloadUrl", version.downloadUrl);
+                                        startService(updateIntent);
+                                    }
+                                })
+                                .setNegativeButton("坚决放弃", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                }).create();
+
+                        alert.setCanceledOnTouchOutside(true);// 设置点击屏幕Dialog消失
+                        alert.show();
+                    }
                 }
             }
 

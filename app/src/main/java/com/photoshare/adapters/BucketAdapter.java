@@ -17,7 +17,7 @@ import java.util.ArrayList;
  */
 public class BucketAdapter extends BaseAdapter {
     private LayoutInflater inflater;
-    ArrayList<MediaStoreBucket> mBuckets;
+    private ArrayList<MediaStoreBucket> mBuckets;
 
     public BucketAdapter(Context context, ArrayList<MediaStoreBucket> buckets) {
         inflater = LayoutInflater.from(context);

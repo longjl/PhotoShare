@@ -110,7 +110,6 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
     private GridView mPhotoGrid;
 
     private final ArrayList<MediaStoreBucket> mBuckets = new ArrayList<MediaStoreBucket>();
-    private PhotoController mPhotoSelectionController;
     private File mPhotoFile;
     private SharedPreferences mPrefs;
 
@@ -155,7 +154,6 @@ public class PhotosFragment extends SherlockFragment implements AdapterView.OnIt
 
     @Override
     public void onAttach(Activity activity) {
-        mPhotoSelectionController = PhotoController.getFromContext(activity);
         super.onAttach(activity);
     }
 

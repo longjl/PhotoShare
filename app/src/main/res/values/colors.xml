@@ -9,12 +9,20 @@
     <color name="selectedtextcolor">#45c21c</color>
     <color name="action_share_color">#45c21c</color>
 
-    <color name="cancel_color">#45c21c</color>
-    <color name="cancel_color_pressed">#2da008</color>
 
     <color name="grid_color">#21292b</color>
 
     <color name="text_color">#393838</color>
+
+
+
+    <color name="blue_med">#2d963c</color>
+    <color name="cancel_color">#2d963c</color>
+    <color name="cancel_color_pressed">#38aa48</color>
+
+
+
+
     <color name="white">#ffffff</color>
     <color name="translucent_lght_grey">#0a627f</color>
     <color name="tab_color">#f8f8f8</color>
@@ -27,7 +35,7 @@
     <!-- Raw Colour Values -->
     <color name="blue_v_dark">#03779e</color>
     <color name="blue_dark">#0596c6</color>
-    <color name="blue_med">#ff33b5e5</color>
+
     <color name="blue_light">#ff6FCDF7</color>
     <color name="translucent_dk_grey">#88000000</color>
     <color name="translucent_grey">#50000000</color>

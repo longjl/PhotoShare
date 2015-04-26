@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">照片分享</string>
-    <string name="app_title">照片分享(%1$d)</string>
+    <string name="app_name">爱牢骚</string>
+    <string name="app_title">(%1$d)</string>
+    <string name="app_title_null"></string>
 
     <string name="action_share">分享</string>
     <string name="action_bucket">照片分类</string>

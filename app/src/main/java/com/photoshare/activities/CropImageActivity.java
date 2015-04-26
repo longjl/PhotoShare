@@ -59,7 +59,7 @@ public class CropImageActivity extends PhotoFragmentActivity implements PhotoIma
     @Override
     public void onStart() {
         super.onStart();
-        getSupportActionBar().setDisplayShowHomeEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
     @Override

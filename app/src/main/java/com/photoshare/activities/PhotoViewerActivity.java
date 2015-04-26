@@ -301,7 +301,7 @@ public class PhotoViewerActivity extends PhotoFragmentActivity implements OnSing
     public void onStart() {
         super.onStart();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(false);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
     @Override
