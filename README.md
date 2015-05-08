@@ -21,3 +21,7 @@
         
 #图集
  ![image](https://github.com/longjl/PhotoShare/blob/master/photo01.jpg)
+ ![image](https://github.com/longjl/PhotoShare/blob/master/photo02.jpg)
+ ![image](https://github.com/longjl/PhotoShare/blob/master/photo03.jpg)
+ ![image](https://github.com/longjl/PhotoShare/blob/master/photo04.jpg)
+ ![image](https://github.com/longjl/PhotoShare/blob/master/photo05.jpg)
