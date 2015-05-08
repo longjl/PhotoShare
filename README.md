@@ -17,3 +17,6 @@
         $ git submodule init
 
         $ git submodule update
+        
+        
+        http://www.android.com/images/brand/get_it_on_play_logo_small.png
