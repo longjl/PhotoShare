@@ -19,4 +19,5 @@
         $ git submodule update
         
         
-        http://www.android.com/images/brand/get_it_on_play_logo_small.png
+#图集
+ ![image](https://github.com/longjl/PhotoShare/blob/master/photo01.jpg)
