@@ -33,7 +33,7 @@ public class Version {
      * @return
      */
     public boolean isUpdate() {
-        if (versionCode > versionCode) {
+        if (remoteCode > versionCode) {
             return true;
         }
         return false;

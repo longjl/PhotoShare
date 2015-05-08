@@ -57,12 +57,15 @@ public class SplashActivity extends PhotoFragmentActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if (getMobileFromPrefs() != null && getPwdFromPrefs() != null) {
+        /*if (getMobileFromPrefs() != null && getPwdFromPrefs() != null) {
             startActivity(new Intent(SplashActivity.this, PhotoShareActivity.class));
             finish();
         } else {
             startActivity(new Intent(SplashActivity.this, LoginActivity.class));
             finish();
-        }
+        }*/
+
+        startActivity(new Intent(SplashActivity.this, PhotoShareActivity.class));
+        finish();
     }
 }

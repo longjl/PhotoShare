@@ -46,6 +46,16 @@ public class ShareUtils {
      * @param content 分享内容
      */
     public static void shareMultiplePictureToSinaWeibo(Context context, List<Photo> photos, String content) {
+        List<Photo> photoList = new ArrayList<Photo>();
+        for (Photo photo : photos) {//判断Photo是否存在,如果不存在就删掉
+            final String filePath = Utils.getPathFromContentUri(context.getContentResolver(), photo.getOriginalPhotoUri());
+            if(filePath !=null && filePath.length()>0){
+                File uploadFile = new File(filePath);
+                if (uploadFile.exists()) {
+                    photoList.add(photo);
+                }
+            }
+        }
 
         ComponentName comp = new ComponentName("com.sina.weibo", "com.sina.weibo.EditActivity");
         Intent intent = new Intent(Intent.ACTION_SEND);
@@ -56,7 +66,7 @@ public class ShareUtils {
         intent.setComponent(comp);
 
         ArrayList<Uri> imageUris = new ArrayList<Uri>();
-        for (Photo photo : photos) {
+        for (Photo photo : photoList) {
             File uploadFile;
             UploadQuality quality = photo.getUploadQuality();
             if (UploadQuality.ORIGINAL == quality && !photo.requiresNativeEditing(context)) {
@@ -101,6 +111,17 @@ public class ShareUtils {
      * @param photos
      */
     private static void shareMultiplePictureToTimeLine(Context context, List<Photo> photos, String content) {
+        List<Photo> photoList = new ArrayList<Photo>();
+        for (Photo photo : photos) {//判断Photo是否存在,如果不存在就删掉
+            final String filePath = Utils.getPathFromContentUri(context.getContentResolver(), photo.getOriginalPhotoUri());
+            if(filePath !=null && filePath.length()>0){
+                File uploadFile = new File(filePath);
+                if (uploadFile.exists()) {
+                    photoList.add(photo);
+                }
+            }
+        }
+
         Intent intent = new Intent();
         ComponentName comp = new ComponentName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareToTimeLineUI");
         intent.setComponent(comp);
@@ -108,7 +129,7 @@ public class ShareUtils {
         intent.setType("image/*");
         intent.putExtra("Kdescription", content);//发表的内容或者描述
         ArrayList<Uri> imageUris = new ArrayList<Uri>();
-        for (Photo photo : photos) {
+        for (Photo photo : photoList) {
             File uploadFile;
             UploadQuality quality = photo.getUploadQuality();
             if (UploadQuality.ORIGINAL == quality && !photo.requiresNativeEditing(context)) {

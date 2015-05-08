@@ -17,7 +17,7 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <gradient
         android:angle="270"
-        android:centerColor="@color/photo_grid_color"
-        android:endColor="@color/photo_grid_color"
-        android:startColor="@color/photo_grid_color" />
+        android:centerColor="@color/actionbar_color"
+        android:endColor="@color/actionbar_color"
+        android:startColor="@color/actionbar_color" />
 </shape>

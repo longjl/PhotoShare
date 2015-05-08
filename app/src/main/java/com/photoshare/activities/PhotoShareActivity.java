@@ -59,6 +59,7 @@ public class PhotoShareActivity extends PhotoFragmentActivity implements View.On
     };
     private View view;
     private int showTarget = 0;//是否显示分享Menu
+    private Intent updateIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +96,7 @@ public class PhotoShareActivity extends PhotoFragmentActivity implements View.On
         tabsHandler.sendEmptyMessage(0);
         EventBus.getDefault().register(this);
 
-        update();
+        //update();
     }
 
     //tabs handler
@@ -192,6 +193,9 @@ public class PhotoShareActivity extends PhotoFragmentActivity implements View.On
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+        if (updateIntent != null) {
+            stopService(updateIntent);
+        }
     }
 
 
@@ -298,23 +302,27 @@ public class PhotoShareActivity extends PhotoFragmentActivity implements View.On
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 if (response.optInt("code") == 200) {
-                    final Version version = new Version(PhotoShareActivity.this, response.optInt("version_code"), response.optString("version_name"), response.optString("download_url"));
+                    JSONObject jsonObject = response.optJSONObject("result");
+
+                    final Version version = new Version(PhotoShareActivity.this,
+                            jsonObject.optInt("version_code"),
+                            jsonObject.optString("version_name"),
+                            jsonObject.optString("download_url"));
                     if (version.isUpdate()) {
                         //发现新版本，提示用户更新
                         AlertDialog alert = new AlertDialog.Builder(PhotoShareActivity.this).setIcon(R.drawable.icon)
-
                                 .setTitle("提示")
                                 .setMessage("发现新版本,建议立即更新使用.")
                                 .setPositiveButton("立即更新", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         //开启更新服务NotificationDownloadService
-                                        Intent updateIntent = new Intent(PhotoShareActivity.this, NotificationDownloadService.class);
+                                        updateIntent = new Intent(PhotoShareActivity.this, NotificationDownloadService.class);
                                         updateIntent.putExtra("id", 0);
                                         updateIntent.putExtra("downloadUrl", version.downloadUrl);
                                         startService(updateIntent);
                                     }
                                 })
-                                .setNegativeButton("坚决放弃", new DialogInterface.OnClickListener() {
+                                .setNegativeButton("果断放弃", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         dialog.dismiss();
                                     }
@@ -332,5 +340,6 @@ public class PhotoShareActivity extends PhotoFragmentActivity implements View.On
             }
         });
     }
+
 
 }

@@ -16,9 +16,9 @@
 
 
 
-    <color name="blue_med">#2d963c</color>
-    <color name="cancel_color">#2d963c</color>
-    <color name="cancel_color_pressed">#38aa48</color>
+    <color name="blue_med">#44c0ff</color>
+    <color name="cancel_color">#44c0ff</color>
+    <color name="cancel_color_pressed">#5cc4f8</color>
 
 
 

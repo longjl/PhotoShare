@@ -59,6 +59,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.FullscreenOverlay"
             android:uiOptions="splitActionBarWhenNarrow"></activity>
+        <service android:name=".service.NotificationDownloadService"/>
     </application>
 
 </manifest>
